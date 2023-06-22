@@ -1,0 +1,2 @@
+class GroupMemberCost < Cost
+end
