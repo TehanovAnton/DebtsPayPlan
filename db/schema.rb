@@ -16,11 +16,12 @@ ActiveRecord::Schema.define(version: 2023_06_22_174451) do
   enable_extension "plpgsql"
 
   create_table "costs", force: :cascade do |t|
-    t.bigint "costable_id", null: false
     t.string "costable_type", null: false
+    t.bigint "costable_id", null: false
     t.integer "cost_value", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["costable_type", "costable_id"], name: "index_costs_on_costable"
   end
 
   create_table "debts", force: :cascade do |t|
