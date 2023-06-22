@@ -1,0 +1,12 @@
+require: rubocop-rails
+
+Style/Documentation:
+  Enabled: false
+
+AllCops:
+  Exclude:
+    - vendor/**/* 
+    - config/**/*
+    - db/**/*
+    - bin/**/*
+    - Gemfile
