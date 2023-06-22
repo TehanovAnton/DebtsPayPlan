@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_22_180221) do
+ActiveRecord::Schema.define(version: 2023_06_22_180434) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,16 @@ ActiveRecord::Schema.define(version: 2023_06_22_180221) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["cost_id"], name: "index_debts_on_cost_id"
+  end
+
+  create_table "group_members", force: :cascade do |t|
+    t.string "group_memberable_type", null: false
+    t.bigint "group_memberable_id", null: false
+    t.bigint "group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_group_members_on_group_id"
+    t.index ["group_memberable_type", "group_memberable_id"], name: "index_group_members_on_group_memberable"
   end
 
   create_table "groups", force: :cascade do |t|
