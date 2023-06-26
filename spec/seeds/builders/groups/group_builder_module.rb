@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 module Seeds
   module Builders
     module Groups
       module GroupBuilderModule
-        def set_users(user_seed)
+        def user_seed_attribute(user_seed)
           @user_seed = user_seed
         end
 
-        def set_cost_attributes(cost_seed)
+        def cost_seed_attribute(cost_seed)
           @cost_seed = cost_seed
         end
 
@@ -17,4 +19,3 @@ module Seeds
     end
   end
 end
-

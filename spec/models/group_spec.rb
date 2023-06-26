@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Group, type: :model do
@@ -5,8 +7,11 @@ RSpec.describe Group, type: :model do
     describe 'users' do
       context 'correct params' do
         let!(:group) do
-          users_seed = Seeds::Models::Users::UserSeed.new(1)
-          Seeds::Models::Groups::GroupSeed.new(users_seed).create
+          user_seed = Seeds::Models::Users::UserSeed.new(1)
+          group_builder = Seeds::Builders::Groups::GroupBuilder.new
+          group_builder.user_seed_attribute(user_seed)
+          group_builder.cost_seed_attribute(Seeds::Models::Costs::CostSeed.new(user_seed))
+          group_builder.make_seed
         end
 
         it 'create group with users' do
@@ -20,8 +25,8 @@ RSpec.describe Group, type: :model do
         let(:group) do
           user_seed = Seeds::Models::Users::UserSeed.new
           group_builder = Seeds::Builders::Groups::GroupBuilder.new
-          group_builder.set_users(user_seed)
-          group_builder.set_cost_attributes(Seeds::Models::Costs::CostSeed.new(user_seed))
+          group_builder.user_seed_attribute(user_seed)
+          group_builder.cost_seed_attribute(Seeds::Models::Costs::CostSeed.new(user_seed))
           group_builder.make_seed
         end
 
@@ -34,7 +39,7 @@ RSpec.describe Group, type: :model do
         let(:group) do
           user_seed = Seeds::Models::Users::UserSeed.new
           group_builder = Seeds::Builders::Groups::NoCostAttributesGroupBuilder.new
-          group_builder.set_users(user_seed)
+          group_builder.user_seed_attribute(user_seed)
           group_builder.build_seed
         end
 

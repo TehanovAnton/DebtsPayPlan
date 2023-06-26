@@ -21,7 +21,7 @@ module Seeds
         def make_seed
           FactoryBot.create(
             :group,
-            users: user_seed.users_collection,
+            users: user_seed.users_collection
           )
         end
 

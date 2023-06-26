@@ -3,6 +3,9 @@ require: rubocop-rails
 Style/Documentation:
   Enabled: false
 
+Metrics/BlockLength:
+  Enabled: false
+
 AllCops:
   Exclude:
     - vendor/**/* 

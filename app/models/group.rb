@@ -6,7 +6,7 @@ module Validations
       extend ActiveSupport::Concern
 
       included do
-        validates_presence_of :cost
+        validates :cost, presence: true
       end
     end
   end
