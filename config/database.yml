@@ -6,7 +6,6 @@ default: &default
   port: <%= ENV['DB_PORT'] %>
   adapter: postgresql
   encoding: unicode
-
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:

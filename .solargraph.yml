@@ -1,8 +1,8 @@
 ---
 include:
 - "app/*.rb"
+- "spec/**/*.rb"
 exclude:
-- spec/**/*
 - test/**/*
 - vendor/**/*
 - ".bundle/**/*"
