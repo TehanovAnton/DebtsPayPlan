@@ -6,12 +6,14 @@ FactoryBot.define do
       "Group #{n}"
     end
 
+    trait :with_cost do
+      cost { association(:cost) }
+    end
+
     trait :with_users do
       transient do
         users_count { 2 }
       end
-
-      association :author, factory: :user
     end
   end
 end
