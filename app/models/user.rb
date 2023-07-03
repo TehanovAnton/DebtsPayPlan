@@ -8,5 +8,5 @@ class User < ApplicationRecord
            through: :group_members
   has_many :costs,
            as: :costable,
-           dependent: :destroy  
+           dependent: :destroy
 end
