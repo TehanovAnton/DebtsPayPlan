@@ -6,4 +6,7 @@ class User < ApplicationRecord
            dependent: :destroy
   has_many :groups,
            through: :group_members
+  has_many :costs,
+           as: :costable,
+           dependent: :destroy  
 end

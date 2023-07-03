@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_22_180434) do
+ActiveRecord::Schema.define(version: 2023_07_03_171212) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,7 +21,9 @@ ActiveRecord::Schema.define(version: 2023_06_22_180434) do
     t.integer "cost_value", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "group_id"
     t.index ["costable_type", "costable_id"], name: "index_costs_on_costable"
+    t.index ["group_id"], name: "index_costs_on_group_id"
   end
 
   create_table "debts", force: :cascade do |t|
@@ -53,4 +55,5 @@ ActiveRecord::Schema.define(version: 2023_06_22_180434) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "costs", "groups"
 end
