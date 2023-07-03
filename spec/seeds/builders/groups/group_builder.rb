@@ -32,6 +32,24 @@ module Seeds
           )
         end
       end
+
+      module SettableFactory
+        class GroupBuilder < Seeds::Builders::Builder
+          def initialize(factory_method, factory)
+            super(factory_method, factory)
+            @factory_bot_attributes = []
+            @factory_bot_named_attributes = {}
+          end
+
+          def seed_attribute(seed, attr_name: nil)
+            self_return { super }
+          end
+
+          def factory_bot_method_attribute(factory_bot_method)
+            self_return { super }
+          end
+        end
+      end
     end
   end
 end

@@ -13,8 +13,11 @@ require 'rspec/rails'
   './spec/seeds/models/users/*.rb',
   './spec/seeds/models/groups/*.rb',
   './spec/seeds/models/costs/*.rb',
+  './spec/seeds/builders/*.rb',
   './spec/seeds/builders/groups/group_builder_module.rb',
-  './spec/seeds/builders/groups/*.rb'
+  './spec/seeds/builders/groups/*.rb',
+  './spec/seeds/builders/users/*.rb',
+  './spec/seeds/builders/costs/*.rb'
 ].each do |folder_path|
   Dir[folder_path].each { |file| require file }
 end
