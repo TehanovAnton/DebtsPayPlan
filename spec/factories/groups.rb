@@ -7,7 +7,7 @@ FactoryBot.define do
     end
 
     trait :with_cost do
-      cost { association(:cost) }
+      cost factory: :cost
     end
 
     trait :with_users do
@@ -15,5 +15,7 @@ FactoryBot.define do
         users_count { 2 }
       end
     end
+
+    factory(:group_with_cost, traits: [:with_cost])
   end
 end

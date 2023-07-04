@@ -6,7 +6,6 @@ module Validations
       extend ActiveSupport::Concern
 
       included do
-        validates :cost, presence: true
       end
     end
   end
@@ -20,9 +19,11 @@ class Group < ApplicationRecord
            through: :group_members,
            source: :group_memberable,
            source_type: 'User'
-  has_one :cost,
-          as: :costable,
-          dependent: :destroy
 
-  accepts_nested_attributes_for :cost
+  has_one :group_member, dependent: :destroy
+  has_one :cost,
+          through: :group_member,
+          source: :group_memberable,
+          source_type: 'Cost',
+          dependent: :destroy
 end

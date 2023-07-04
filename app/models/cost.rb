@@ -2,9 +2,24 @@
 
 class Cost < ApplicationRecord
   has_one :debt, dependent: :destroy
-  belongs_to :group
+
+  has_one :group_member,
+          as: :group_memberable,
+          dependent: :destroy
+  has_one :group, through: :group_member
+
   belongs_to :costable,
-             polymorphic: true
+             polymorphic: true,
+             optional: true
 
   scope :group_cost, ->(group) { Cost.joins(:group).where(groups: { id: group.id }).first }
+  scope :group_users_costs, ->(group) do
+    Cost.joins(:group)
+        .where(
+          groups: { id: group.id },
+          costs: { costable_type: 'User' }
+        )
+  end
+
+  accepts_nested_attributes_for :group_member
 end

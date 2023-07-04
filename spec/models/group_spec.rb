@@ -52,7 +52,7 @@ RSpec.describe Group, type: :model do
                        .result
         end
 
-        it 'will not create groupcost' do
+        it 'will not create group cost' do
           expect(group).not_to be_valid
         end
       end
