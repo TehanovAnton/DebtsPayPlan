@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CostsController < ApplicationController
   def create
     @cost = Cost.create(cost_params)

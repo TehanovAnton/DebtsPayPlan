@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "Costs", type: :request do
-  describe "POST /groups/:group_id/users/:user_id/costs" do
+RSpec.describe 'Costs', type: :request do
+  describe 'POST /groups/:group_id/users/:user_id/costs' do
     context 'create first group cost' do
       let!(:user) do
         FactoryBot.create(:user)
@@ -25,13 +27,13 @@ RSpec.describe "Costs", type: :request do
       let(:post_cost_url) { "/groups/#{group.id}/users/#{user.id}/costs" }
 
       it 'creates cost' do
-        post post_cost_url, params: params
-        
+        post(post_cost_url, params:)
+
         expect(Cost.count).to eq(2)
       end
 
       it 'group has cost' do
-        post post_cost_url, params: params
+        post(post_cost_url, params:)
         expect(group.reload.cost.cost_value).to eq(Cost.last.cost_value)
       end
     end

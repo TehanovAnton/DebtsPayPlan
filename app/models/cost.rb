@@ -13,13 +13,13 @@ class Cost < ApplicationRecord
              optional: true
 
   scope :group_cost, ->(group) { Cost.joins(:group).where(groups: { id: group.id }).first }
-  scope :group_users_costs, ->(group) do
+  scope :group_users_costs, lambda { |group|
     Cost.joins(:group)
         .where(
           groups: { id: group.id },
           costs: { costable_type: 'User' }
         )
-  end
+  }
 
   accepts_nested_attributes_for :group_member
 end
