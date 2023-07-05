@@ -12,11 +12,17 @@ class Cost < ApplicationRecord
              polymorphic: true,
              optional: true
 
-  scope :group_cost, ->(group) { Cost.joins(:group).where(groups: { id: group.id }).first }
+  scope :group_cost, lambda { |group|
+                       Cost.joins(:group)
+                           .where(
+                             costs: { costable_type: 'User', costable_id: id },
+                             groups: { id: group.id }
+                           ).first
+                     }
   scope :group_users_costs, lambda { |group|
-    Cost.joins(:group)
+    Cost.joins(:group_member)
         .where(
-          groups: { id: group.id },
+          group_members: { group_id: group.id },
           costs: { costable_type: 'User' }
         )
   }

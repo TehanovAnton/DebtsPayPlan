@@ -10,12 +10,12 @@ FactoryBot.define do
       cost factory: :cost
     end
 
-    trait :with_users do
+    trait :with_group_cost do
       transient do
-        users_count { 2 }
+        cost_value { 0 }
       end
-    end
 
-    factory(:group_with_cost, traits: [:with_cost])
+      cost { association(:group_cost, cost_value:) }
+    end
   end
 end

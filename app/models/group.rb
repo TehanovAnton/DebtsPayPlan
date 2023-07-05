@@ -24,6 +24,6 @@ class Group < ApplicationRecord
   has_one :cost,
           through: :group_member,
           source: :group_memberable,
-          source_type: 'Cost',
+          source_type: 'GroupCost',
           dependent: :destroy
 end

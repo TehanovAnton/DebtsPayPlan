@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_04_094000) do
+ActiveRecord::Schema.define(version: 2023_07_04_114244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2023_07_04_094000) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "group_id"
+    t.string "type"
     t.index ["costable_type", "costable_id"], name: "index_costs_on_costable"
     t.index ["group_id"], name: "index_costs_on_group_id"
   end
