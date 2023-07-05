@@ -17,4 +17,3 @@ module Creaters
     end
   end
 end
-

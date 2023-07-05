@@ -27,6 +27,14 @@ class Group < ApplicationRecord
           source_type: 'GroupCost',
           dependent: :destroy
 
+  has_one :group_owner_member, dependent: :destroy
+  has_one :owner,
+          through: :group_owner_member,
+          source: :group_memberable,
+          source_type: 'User'
+
+  accepts_nested_attributes_for :group_owner_member
+
   def average_group_users_cost_value
     group_users_costs_values.sum / group_users_costs_values.length.to_f
   end

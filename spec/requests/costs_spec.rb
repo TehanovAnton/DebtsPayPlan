@@ -24,7 +24,7 @@ RSpec.describe 'Costs', type: :request do
         }
       end
 
-      let(:post_cost_url) { "/groups/#{group.id}/users/#{user.id}/costs" }
+      let(:post_cost_url) { "/users/#{user.id}/groups/#{group.id}/costs" }
 
       it 'creates cost' do
         post(post_cost_url, params:)
@@ -82,7 +82,7 @@ RSpec.describe 'Costs', type: :request do
       end
 
       def post_cost_url(group, user)
-        "/groups/#{group.id}/users/#{user.id}/costs"
+        "/users/#{user.id}/groups/#{group.id}/costs"
       end
 
       it 'updates group cost' do
