@@ -26,4 +26,13 @@ class Group < ApplicationRecord
           source: :group_memberable,
           source_type: 'GroupCost',
           dependent: :destroy
+
+  def average_group_users_cost_value
+    group_users_costs_values.sum / group_users_costs_values.length.to_f
+  end
+
+  def group_users_costs_values
+    Cost.group_users_costs(self)
+        .pluck(:cost_value)
+  end
 end
