@@ -9,4 +9,12 @@ class User < ApplicationRecord
   has_many :costs,
            as: :costable,
            dependent: :destroy
+
+  def user_group_cost(group)
+    costs.joins(:group)
+         .where(
+           costs: { costable_type: self.class.name, costable_id: id },
+           groups: { id: group.id }
+         ).first
+  end
 end

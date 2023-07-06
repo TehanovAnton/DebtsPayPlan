@@ -4,19 +4,31 @@
       User
     </div>
     <div class="col">
-      User Costs
+      User Cost
+    </div>
+    <div class="col">
+      Debt
     </div>
   </div>
 
+  <% group_cost = @group.cost %>
   <% @group.users.each do |user| %>
     <div class="row">
       <div class="col">
         <%= user.name %>
       </div>
-
       <div class="col">
-        <%= user.costs.group_cost(@group)&.cost_value %>
+        <% user_group_cost = user.user_group_cost(@group) %>
+        <%= user_group_cost&.cost_value %>
+      </div>
+      <div class="col">
+        <%= user_group_cost.cost_value - group_cost.cost_value %>
       </div>
     </div>
   <% end %>
+  <br/>
+
+  <div class="row">
+    Group Cost: <%= group_cost.cost_value %>
+  </div>
 </div>
