@@ -17,4 +17,8 @@ class User < ApplicationRecord
            groups: { id: group.id }
          ).first
   end
+
+  def user_group_debt(group)
+    user_group_cost(group)&.debt
+  end
 end

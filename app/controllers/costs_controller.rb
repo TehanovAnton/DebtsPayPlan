@@ -2,7 +2,7 @@
 
 class CostsController < ApplicationController
   def create
-    @group = Group.find(params[:group_id])
+    @group = Group.includes(:users).find(params[:group_id])
     cost_creater = Creaters::CostsCreaters::CostCreater.new(cost_params)
     cost_creater.create
 
@@ -10,6 +10,11 @@ class CostsController < ApplicationController
       Updaters::CostsUpdaters::GroupCostUpdater.new(@group, @group.cost).update
     else
       Creaters::CostsCreaters::GroupCostCreater.new(@group).create
+      # Group debts creater
+      @group.users.each do |user|
+        debt_value = cost_creater.cost.cost_value - @group.cost.cost_value
+        Debt.create(user:, cost: cost_creater.cost, debt_value:)
+      end
     end
   end
 
