@@ -10,7 +10,7 @@ class User < ApplicationRecord
            as: :costable,
            dependent: :destroy
 
-  def user_group_cost(group)
+  def group_user_cost(group)
     costs.joins(:group)
          .where(
            costs: { costable_type: self.class.name, costable_id: id },
@@ -18,7 +18,7 @@ class User < ApplicationRecord
          ).first
   end
 
-  def user_group_debt(group)
-    user_group_cost(group)&.debt
+  def group_user_debt(group)
+    group_user_cost(group)&.debt
   end
 end

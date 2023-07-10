@@ -2,11 +2,30 @@
 
 class GroupsController < ApplicationController
   def create
-    Group.create(group_params)
+    @group = Group.create(group_params)
+
+    Creaters::CostsCreaters::GroupCostCreater.new(@group).create
   end
 
   def show
     @group = Group.find(params[:id])
+  end
+
+  def add_user_member
+    @group = Group.find(params[:id])
+    @user = User.find(params[:user_id])
+    @group.users << @user
+
+    cost_creater = Creaters::CostsCreaters::CostCreater.new({
+      costable: @user,
+      cost_value: 0,
+      group_member_attributes: {
+        group: @group
+      }
+    })
+    cost_creater.create
+
+    Debt.create(user: @user, cost: cost_creater.cost, debt_value: 0)
   end
 
   private

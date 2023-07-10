@@ -36,6 +36,8 @@ class Group < ApplicationRecord
   accepts_nested_attributes_for :group_owner_member
 
   def average_group_users_cost_value
+    return 0 if group_users_costs_values.empty?
+
     group_users_costs_values.sum / group_users_costs_values.length.to_f
   end
 

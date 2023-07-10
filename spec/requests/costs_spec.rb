@@ -5,7 +5,6 @@ require 'rails_helper'
 RSpec.describe 'Costs', type: :request do
   describe 'POST /groups/:group_id/users/:user_id/costs' do
     context 'create first group cost' do
-
       let!(:group) do
         FactoryBot.create(:group)
       end
@@ -42,7 +41,7 @@ RSpec.describe 'Costs', type: :request do
       it 'creates group users debts' do
         post(post_cost_url, params:)
 
-        expect(user.user_group_debt(group)).to be
+        expect(user.group_user_debt(group)).to be
       end
     end
 
