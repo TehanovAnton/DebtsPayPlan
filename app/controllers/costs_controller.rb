@@ -6,15 +6,14 @@ class CostsController < ApplicationController
     cost_creater = Creaters::CostsCreaters::CostCreater.new(cost_params)
     cost_creater.create
 
-    if @group.cost
-      Updaters::CostsUpdaters::GroupCostUpdater.new(@group, @group.cost).update
-    else
-      Creaters::CostsCreaters::GroupCostCreater.new(@group).create
-      # Group debts creater
-      @group.users.each do |user|
-        debt_value = cost_creater.cost.cost_value - @group.cost.cost_value
-        Debt.create(user:, cost: cost_creater.cost, debt_value:)
-      end
+    Updaters::CostsUpdaters::GroupCostUpdater.new(@group, @group.cost).update
+
+    debt_value = cost_creater.cost.cost_value - @group.cost.cost_value
+    Debt.create(user: cost_creater.cost.costable, cost: cost_creater.cost, debt_value:)
+
+    @group.users.each do |user|
+      debt_value = user.group_user_cost(@group).cost_value - @group.cost.cost_value
+      user.group_user_debt(@group).update(debt_value:)
     end
   end
 

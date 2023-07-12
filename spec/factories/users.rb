@@ -30,13 +30,14 @@ FactoryBot.define do
 
     trait :with_debt do
       transient do
-        group {}
+        debt_group {}
+        debt_value {}
       end
 
       after(:create) do |user, evaluater|
         Debt.create(
           user:,
-          cost: evaluater.cost,
+          cost: user.group_user_cost(evaluater.debt_group),
           debt_value: evaluater.debt_value
         )
       end

@@ -60,9 +60,12 @@ RSpec.describe 'Costs', type: :request do
           :user,
           :in_group,
           :with_cost,
+          :with_debt,
+          group:,
           cost_value: 1,
           cost_group: group,
-          group:,
+          debt_group: group,
+          debt_value: 0,
           name: 'User 1'
         )
       end
@@ -94,6 +97,12 @@ RSpec.describe 'Costs', type: :request do
       it 'updates group cost' do
         post(post_cost_url(group, user2), params:)
         expect(Group.last.cost.cost_value).to eq(2)
+      end
+
+      it 'updates group users debts' do
+        post(post_cost_url(group, user2), params:)
+
+        expect(user1.group_user_debt(group).debt_value).to be(-1.0)
       end
     end
   end

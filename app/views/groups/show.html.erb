@@ -22,7 +22,7 @@
         <%= group_user_cost&.cost_value %>
       </div>
       <div class="col">
-        <%= group_user_cost.cost_value - group_cost.cost_value %>
+        <%= user.group_user_debt(@group)&.debt_value %>
       </div>
     </div>
   <% end %>
