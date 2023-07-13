@@ -11,10 +11,10 @@ class CostsController < ApplicationController
     debt_value = cost_creater.cost.cost_value - @group.cost.cost_value
     Debt.create(user: cost_creater.cost.costable, cost: cost_creater.cost, debt_value:)
 
-    @group.users.each do |user|
-      debt_value = user.group_user_cost(@group).cost_value - @group.cost.cost_value
-      user.group_user_debt(@group).update(debt_value:)
-    end
+    group_users_debts_updater = Updaters::DebtsUpdaters::GroupUsersDebtsUpdater.new(
+      @group
+    )
+    group_users_debts_updater.update
   end
 
   private

@@ -6,7 +6,11 @@ RSpec.describe 'Costs', type: :request do
   describe 'POST /groups/:group_id/users/:user_id/costs' do
     context 'create first group cost' do
       let!(:group) do
-        FactoryBot.create(:group)
+        FactoryBot.create(
+          :group,
+          :with_group_cost,
+          cost_value: 0
+        )
       end
 
       let!(:user) do
