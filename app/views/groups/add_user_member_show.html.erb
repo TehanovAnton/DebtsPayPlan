@@ -1,0 +1,6 @@
+<%= form_with url: add_user_member_group_path(@group) do |form| %>
+  <%= form.label 'user_name', "User name" %>
+  <%= form.text_field 'user_name' %>
+
+  <%= form.submit "Add" %>
+<% end %>

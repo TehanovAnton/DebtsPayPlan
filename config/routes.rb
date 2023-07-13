@@ -8,4 +8,11 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :groups do
+    member do
+      get :add_user_member_show
+      post :add_user_member
+    end
+  end
 end
