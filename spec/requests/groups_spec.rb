@@ -63,7 +63,7 @@ RSpec.describe 'Groups', type: :request do
       it 'creates zero cost for user' do
         post(add_user_member_user_group_path(user, group, user_name: user.name))
 
-        expect(user.group_user_cost(group).cost_value).to be(0)
+        expect(user.group_user_costs(group).cost_value).to be(0)
       end
 
       it 'creates zero user debt' do

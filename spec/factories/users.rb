@@ -37,7 +37,7 @@ FactoryBot.define do
       after(:create) do |user, evaluater|
         Debt.create(
           user:,
-          cost: user.group_user_cost(evaluater.debt_group),
+          cost: user.group_user_costs(evaluater.debt_group),
           debt_value: evaluater.debt_value
         )
       end

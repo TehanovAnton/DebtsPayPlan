@@ -18,8 +18,8 @@
         <%= user.name %>
       </div>
       <div class="col">
-        <% group_user_cost = user.group_user_cost(@group) %>
-        <%= group_user_cost&.cost_value %>
+        <% group_user_costs = user.group_user_costs(@group) %>
+        <%= group_user_costs&.cost_value %>
       </div>
       <div class="col">
         <%= user.group_user_debt(@group)&.debt_value %>

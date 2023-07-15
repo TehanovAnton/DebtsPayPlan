@@ -12,9 +12,12 @@ module Creaters
       end
 
       def create
-        group.cost = GroupCost.create(
+        GroupCost.create(
           cost_value: group.average_group_users_cost_value,
-          group_member_attributes: { group_id: group.id }
+          group_member_attributes: {
+            type: 'GroupCostMember',
+            group_id: group.id
+          }
         )
       end
     end

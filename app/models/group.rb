@@ -6,6 +6,7 @@ module Validations
       extend ActiveSupport::Concern
 
       included do
+        validates :group_owner_member, presence: true
       end
     end
   end
@@ -20,12 +21,18 @@ class Group < ApplicationRecord
            source: :group_memberable,
            source_type: 'User'
 
-  has_one :group_member, dependent: :destroy
-  has_one :cost,
-          through: :group_member,
-          source: :group_memberable,
-          source_type: 'GroupCost',
+  has_one :group_cost_member,
           dependent: :destroy
+  has_one :cost,
+          through: :group_cost_member,
+          source: :group_memberable,
+          source_type: 'Cost'
+
+  has_many :debts,
+           through: :group_members,
+           source: :group_memberable,
+           source_type: 'Debt',
+           dependent: :destroy
 
   has_one :group_owner_member, dependent: :destroy
   has_one :owner,
