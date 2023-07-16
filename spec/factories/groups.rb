@@ -6,6 +6,8 @@ FactoryBot.define do
       "Group #{n}"
     end
 
+    owner { association(:user) }
+
     trait :with_cost do
       cost factory: :cost
     end

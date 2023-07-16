@@ -105,8 +105,13 @@ RSpec.describe 'Costs', type: :request do
 
       it 'updates group users debts' do
         post(post_cost_url(group, user2), params:)
+        group.reload
 
-        expect(user1.group_user_debt(group).debt_value).to be(-1.0)
+        [user1, user2].each do |uesr|
+          group_user_info = Services::Info::GroupUserInfoService.new(uesr, group)
+
+          expect(group_user_info.debt.debt_value).to be(group_user_info.callculate_debt_value)
+        end
       end
     end
   end

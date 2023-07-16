@@ -3,13 +3,25 @@
 class User < ApplicationRecord
   has_many :group_members,
            as: :group_memberable,
-           dependent: :destroy
+           dependent: :destroy,
+           class_name: 'GroupMember'
   has_many :groups,
            through: :group_members
+
+  has_many :group_owner_members,
+           as: :group_memberable,
+           dependent: :destroy,
+           class_name: 'GroupOwnerMember'
+  has_many :own_groups,
+           through: :group_owner_members,
+           source: :group
+
   has_many :costs,
            as: :costable,
            dependent: :destroy
-  has_many :debts
+
+  has_many :debts,
+           dependent: :destroy
 
   def group_user_costs(group)
     costs.joins(:group)
@@ -19,10 +31,11 @@ class User < ApplicationRecord
          )
   end
 
-  def group_user_costs_sum(group)
-  end
+  def group_user_costs_sum(group); end
 
   def group_user_debt(group)
-    group_user_costs(group)&.debt
+    debts.joins(:group)
+         .where(group_members: { group_id: group.id })
+         .first
   end
 end

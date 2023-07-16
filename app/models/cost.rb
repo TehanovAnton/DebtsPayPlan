@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Cost < ApplicationRecord
-  belongs_to :debt
+  belongs_to :debt, optional: true
 
   has_one :group_member,
           as: :group_memberable,

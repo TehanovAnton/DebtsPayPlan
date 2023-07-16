@@ -11,12 +11,13 @@ module Updaters
 
       def update
         group.users.each do |user|
-          user_cost = user.group_user_costs(@group)
-          debt_value = user_cost.cost_value - @group.cost.cost_value
-          debt = user.group_user_debt(@group)
-          next debt.update(debt_value:) if debt
+          group_user_info = Services::Info::GroupUserInfoService.new(user, group)
 
-          Debt.create(user:, cost: user_cost, debt_value:)
+          debt_value = group_user_info.callculate_debt_value
+          debt_params = { debt_value: }
+          next group_user_info.debt.update(**debt_params) if group_user_info.debt
+
+          Debt.create(user:, group: group_user_info.group, debt_value:)
         end
       end
     end
