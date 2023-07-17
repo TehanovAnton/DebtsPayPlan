@@ -13,22 +13,23 @@
 
   <% group_cost = @group.cost %>
   <% @group.users.each do |user| %>
+  <% group_user_info = Services::Info::GroupUserInfoService.new(user, @group) %>
+
     <div class="row">
       <div class="col">
         <%= user.name %>
       </div>
       <div class="col">
-        <% group_user_costs = user.group_user_costs(@group) %>
-        <%= group_user_costs&.cost_value %>
+        <%= group_user_info.costs_sum %>
       </div>
       <div class="col">
-        <%= user.group_user_debt(@group)&.debt_value %>
+        <%= group_user_info.debt&.debt_value %>
       </div>
     </div>
   <% end %>
   <br/>
 
   <div class="row">
-    Group Cost: <%= group_cost.cost_value %>
+    Group Cost: <%= @group.cost&.cost_value %>
   </div>
 </div>

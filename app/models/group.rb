@@ -45,7 +45,7 @@ class Group < ApplicationRecord
   def average_group_users_cost_value
     return 0 if group_users_costs_values.empty?
 
-    group_users_costs_values.sum / group_users_costs_values.length.to_f
+    group_users_costs_values.sum / users.length.to_f
   end
 
   def group_users_costs_values
