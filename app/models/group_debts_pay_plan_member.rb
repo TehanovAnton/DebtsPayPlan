@@ -1,0 +1,2 @@
+class GroupDebtsPayPlanMember < GroupMember
+end

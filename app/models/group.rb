@@ -28,6 +28,14 @@ class Group < ApplicationRecord
           source: :group_memberable,
           source_type: 'Cost'
 
+  has_one :group_debts_pay_plan_member,
+          dependent: :destroy
+  has_one :group_debts_pay_plan,
+          through: :group_debts_pay_plan_member,
+          source: :group_memberable,
+          source_type: 'GroupDebtsPayPlan',
+          dependent: :destroy
+
   has_many :debts,
            through: :group_members,
            source: :group_memberable,
