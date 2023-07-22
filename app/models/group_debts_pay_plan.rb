@@ -18,7 +18,6 @@ class GroupDebtsPayPlan < ApplicationRecord
           dependent: :destroy
   has_one :group,
           through: :group_debts_pay_plan_member
-  
   has_many :debt_steps,
            dependent: :destroy
 end
