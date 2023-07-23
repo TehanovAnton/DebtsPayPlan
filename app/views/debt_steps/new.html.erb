@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row">
+    <%= form_with url: group_debt_steps_path(@group), model: @debt_step, class: 'col-sm-4' do |form| %>
+      <% 
+        users = @group.users
+        users_for_select = users.map do |user|
+          [user.name, user.id]
+        end
+      %>
+
+      <div class="container">
+        <div class="row m-3">
+          <%= form.label :debter_id, 'Debter' %>
+          <%= form.select :debter_id, users_for_select, model: @debt_step %>
+        </div>
+
+        <div class="row m-3">
+          <%= form.label :recipient_id, 'Recipient' %>
+          <%= form.select :recipient_id, users_for_select %>
+        </div>
+      </div>
+
+      <%= form.submit class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+</div>

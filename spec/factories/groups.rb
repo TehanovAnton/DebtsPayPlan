@@ -29,9 +29,8 @@ FactoryBot.define do
     end
 
     after(:create) do |group, evluater|
-      return unless evluater.add_users
-
-      group.users << evluater.add_users
+      users = evluater.add_users
+      group.users << users if users
     end
   end
 end

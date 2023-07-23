@@ -33,6 +33,11 @@ class GroupDebtsPayPlanCreater
 end
 
 class DebtStepsController < ApplicationController
+  def new
+    @group = Group.find(params[:group_id])
+    @debt_step = DebtStep.new
+  end
+
   def create
     @group = Group.find(params[:group_id])
     @debter = User.find(debt_step_params[:debter_id])
