@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'association check' do
   it do
     expect(model.method(association_name).call).to eql(association)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DebtStepCreater
   attr_reader :group_debts_pay_plan, :debter, :recipient, :debt_step
 
@@ -33,9 +35,11 @@ class GroupDebtsPayPlanCreater
 end
 
 class DebtStepsController < ApplicationController
+  add_flash_types :error
+
   def new
     @group = Group.find(params[:group_id])
-    @debt_step = DebtStep.new
+    @debt_step = DebtStep.new(**debt_step_form_fields_params)
   end
 
   def create
@@ -46,12 +50,38 @@ class DebtStepsController < ApplicationController
     @group_debts_pay_plan = GroupDebtsPayPlanCreater.new(@group).create
     @debt_step = DebtStepCreater.new(@group_debts_pay_plan, @debter, @recipient).create
 
-    redirect_to group_path(@group)
+    return redirect_to group_path(@group) if @debt_step.valid?
+
+    flash_errors
+    redirect_to new_group_debt_step_path(@group, debt_step_form_fields:)
   end
 
   private
 
+  def flash_errors
+    @debt_step.errors.each do |error|
+      flash[:error] = error.full_message
+    end
+  end
+
   def debt_step_params
     params.require(:debt_step).permit(:debter_id, :recipient_id)
+  end
+
+  def debt_step_form_fields_names
+    %i[debter_id recipient_id group_debts_pay_plan_id]
+  end
+
+  def debt_step_form_fields_params
+    params.require(:debt_step_form_fields)
+          .permit(*debt_step_form_fields_names)
+  end
+
+  def debt_step_form_fields
+    fields = debt_step_form_fields_names
+
+    @debt_step.attributes.select do |key, _|
+      fields.include?(key.to_sym)
+    end
   end
 end

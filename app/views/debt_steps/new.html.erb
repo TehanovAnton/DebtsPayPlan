@@ -1,5 +1,11 @@
 <div class="container">
   <div class="row">
+    <% flash.each do |type, msg| %>
+      <div>
+        <%= msg %>
+      </div>
+    <% end %>
+
     <%= form_with url: group_debt_steps_path(@group), model: @debt_step, class: 'col-sm-4' do |form| %>
       <% 
         users = @group.users
