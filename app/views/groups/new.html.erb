@@ -1,9 +1,13 @@
-<%= form_with url: user_groups_path(@user) do |form| %>
-  <%= form.label 'group[name]', "New group:" %>
-  <%= form.text_field 'group[name]' %>
+<div class="container">
+  <div class="row">
+    <%= form_with url: user_groups_path(@user) do |form| %>
+      <%= form.label 'group[name]', "New group:" %>
+      <%= form.text_field 'group[name]' %>
 
-  <%= form.hidden_field 'group[group_owner_member_attributes[group_memberable_type]]', value: @user.class.name %>
-  <%= form.hidden_field 'group[group_owner_member_attributes[group_memberable_id]]', value: @user.id %>
-  <%= form.hidden_field 'group[group_owner_member_attributes[type]]', value: GroupOwnerMember.name %>
-  <%= form.submit "Create" %>
-<% end %>
+      <%= form.hidden_field 'group[group_owner_member_attributes[group_memberable_type]]', value: @user.class.name %>
+      <%= form.hidden_field 'group[group_owner_member_attributes[group_memberable_id]]', value: @user.id %>
+      <%= form.hidden_field 'group[group_owner_member_attributes[type]]', value: GroupOwnerMember.name %>
+      <%= form.submit "Create" %>
+    <% end %>
+  </div>
+</div>
