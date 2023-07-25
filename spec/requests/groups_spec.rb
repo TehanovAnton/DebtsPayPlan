@@ -26,13 +26,11 @@ RSpec.describe 'Groups', type: :request do
 
       it 'creates group' do
         post(user_groups_path(user), params:)
-
         expect(Group.count).to eq(1)
       end
 
       it 'has group owner' do
         post(user_groups_path(user), params:)
-
         expect(Group.last.owner).to eq(user)
       end
 
@@ -40,10 +38,17 @@ RSpec.describe 'Groups', type: :request do
         post(user_groups_path(user), params:)
         expect(Group.last.cost.cost_value).to be(0.0)
       end
+
+      it 'creates zero owner cost' do
+        expect do
+          post(user_groups_path(user), params:)
+        end.to change(
+          Cost.where(costable_type: 'User', costable_id: user.id), :count).by(1)
+      end
     end
   end
 
-  describe 'PUT ' do
+  describe 'PUT add_user_member_user_group' do
     context 'add first user' do
       let(:group) do
         FactoryBot.create(:group)

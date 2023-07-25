@@ -3,16 +3,24 @@
 module Creaters
   module CostsCreaters
     class CostCreater < BaseCostCreater
-      attr_reader :cost_params, :cost
+      attr_reader :costable, :cost_value, :group, :debt, :cost
 
-      def initialize(cost_params)
+      def initialize(costable, cost_value, group, debt)
         super()
 
-        @cost_params = cost_params
+        @costable = costable
+        @cost_value = cost_value
+        @group = group
+        @debt = debt
       end
 
       def create
-        @cost = Cost.create(cost_params)
+        @cost = Cost.create(
+          costable:,
+          cost_value:,
+          debt:,
+          group:
+        )
       end
     end
   end
