@@ -48,6 +48,12 @@ class Group < ApplicationRecord
           source: :group_memberable,
           source_type: 'User'
 
+  has_many :user_step_states,
+           through: :group_members,
+           source: :group_memberable,
+           source_type: 'GroupUserStepState',
+           dependent: :destroy
+
   accepts_nested_attributes_for :group_owner_member
 
   def average_group_users_cost_value

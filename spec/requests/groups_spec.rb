@@ -42,8 +42,13 @@ RSpec.describe 'Groups', type: :request do
       it 'creates zero owner cost' do
         expect do
           post(user_groups_path(user), params:)
-        end.to change(
-          Cost.where(costable_type: 'User', costable_id: user.id), :count).by(1)
+        end.to change(Cost.where(costable_type: 'User', costable_id: user.id), :count).by(1)
+      end
+
+      it 'creates group user step state' do
+        expect do
+          post(user_groups_path(user), params:)
+        end.to change(GroupUserStepState.where(user_id: user.id), :count).by(1)
       end
     end
   end

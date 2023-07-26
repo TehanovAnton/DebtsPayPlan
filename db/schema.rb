@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_24_104528) do
+ActiveRecord::Schema.define(version: 2023_07_24_115952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,8 +66,8 @@ ActiveRecord::Schema.define(version: 2023_07_24_104528) do
 
   create_table "group_user_step_states", force: :cascade do |t|
     t.bigint "user_id"
-    t.bigint "cost_ids", array: true
-    t.float "cost_values", array: true
+    t.bigint "cost_ids", default: [], array: true
+    t.float "cost_values", default: [], array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["cost_ids"], name: "index_group_user_step_states_on_cost_ids", using: :gin

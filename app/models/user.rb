@@ -23,6 +23,9 @@ class User < ApplicationRecord
   has_many :debts,
            dependent: :destroy
 
+  has_many :group_user_step_states,
+           dependent: :destroy
+
   def group_user_costs(group)
     costs.joins(:group)
          .where(
@@ -37,5 +40,11 @@ class User < ApplicationRecord
     debts.joins(:group)
          .where(group_members: { group_id: group.id })
          .first
+  end
+
+  def group_user_step_state(group)
+    group_user_step_states.joins(:group)
+                          .where(groups: { id: group.id })
+                          .first
   end
 end

@@ -11,7 +11,7 @@ class GroupsController < ApplicationController
       group_params[:name],
       @user
     )
-    group_create_director.create    
+    group_create_director.create
 
     redirect_to add_user_member_show_group_path(group_create_director.group)
   end
