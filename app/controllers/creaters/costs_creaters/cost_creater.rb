@@ -30,7 +30,7 @@ module Creaters
           costable,
           group
         )
-      end      
+      end
     end
   end
 end
