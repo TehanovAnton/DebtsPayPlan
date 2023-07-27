@@ -19,14 +19,14 @@ class DebtStepsController < ApplicationController
     @recipient = User.find(debt_step_params[:recipient_id])
     @pay_value = debt_step_params[:pay_value]
 
-    @group_debts_pay_plan = Creaters::GroupDebtsPayPlans::GroupDebtsPayPlanCreater.new(@group)
-                                                                                  .create
-    @debt_step = Creaters::DebtSteps::DebtStepCreater.new(
-      @group_debts_pay_plan,
+    debt_step_create_director = Services::DebtSteps::DebtStepCreateDirector.new(
+      @group,
       @debter,
       @recipient,
       @pay_value
-    ).create
+    )
+    debt_step_create_director.create
+    @debt_step = debt_step_create_director.debt_step
 
     return redirect_to group_path(@group) if @debt_step.valid?
 

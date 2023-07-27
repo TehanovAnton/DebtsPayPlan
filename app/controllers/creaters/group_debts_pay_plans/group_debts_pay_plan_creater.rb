@@ -3,7 +3,7 @@
 module Creaters
   module GroupDebtsPayPlans
     class GroupDebtsPayPlanCreater
-      attr_reader :group
+      attr_reader :group, :group_debts_pay_plan
 
       def initialize(group)
         @group = group
