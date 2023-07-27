@@ -19,7 +19,8 @@ class DebtStepsController < ApplicationController
     @recipient = User.find(debt_step_params[:recipient_id])
     @pay_value = debt_step_params[:pay_value]
 
-    @group_debts_pay_plan = Creaters::GroupDebtsPayPlans::GroupDebtsPayPlanCreater.new(@group).create
+    @group_debts_pay_plan = Creaters::GroupDebtsPayPlans::GroupDebtsPayPlanCreater.new(@group)
+                                                                                  .create
     @debt_step = Creaters::DebtSteps::DebtStepCreater.new(
       @group_debts_pay_plan,
       @debter,
