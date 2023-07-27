@@ -52,9 +52,9 @@ module Services
       def changed_debt(user)
         case user
         when debter
-          (debter_debt.debt_value + pay_value).to_f
+          (user_debt(user).debt_value + pay_value).to_f
         when recipient
-          (recipient_debt.debt_value - pay_value).to_f
+          (user_debt(user).debt_value - pay_value).to_f
         end
       end
     end
