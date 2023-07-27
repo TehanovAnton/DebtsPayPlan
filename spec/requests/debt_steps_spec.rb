@@ -3,10 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe 'DebtSteps', type: :request do
-  describe 'GET /index' do
-    pending "add some examples (or delete) #{__FILE__}"
-  end
-
   describe 'POST create' do
     let(:user1)  do
       FactoryBot.create(:user, name: 'User 1')
@@ -25,7 +21,7 @@ RSpec.describe 'DebtSteps', type: :request do
       )
     end
 
-    let(:user1_cost) do
+    let!(:user1_cost) do
       FactoryBot.create(
         :cost,
         group:,
@@ -34,7 +30,7 @@ RSpec.describe 'DebtSteps', type: :request do
       )
     end
 
-    let(:user2_cost) do
+    let!(:user2_cost) do
       FactoryBot.create(
         :cost,
         group:,
@@ -47,7 +43,8 @@ RSpec.describe 'DebtSteps', type: :request do
       {
         debt_step: {
           debter_id: user1.id,
-          recipient_id: user2.id
+          recipient_id: user2.id,
+          pay_value: 1
         }
       }
     end

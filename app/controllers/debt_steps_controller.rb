@@ -1,40 +1,5 @@
 # frozen_string_literal: true
 
-class DebtStepCreater
-  attr_reader :group_debts_pay_plan, :debter, :recipient, :debt_step, :pay_value
-
-  def initialize(group_debts_pay_plan, debter, recipient, pay_value)
-    @group_debts_pay_plan = group_debts_pay_plan
-    @debter = debter
-    @recipient = recipient
-    @pay_value = pay_value
-  end
-
-  def create
-    @debt_step = DebtStep.create(group_debts_pay_plan:, recipient:, debter:, pay_value:)
-  end
-end
-
-class GroupDebtsPayPlanCreater
-  attr_reader :group
-
-  def initialize(group)
-    @group = group
-  end
-
-  def create
-    return @group_debts_pay_plan = @group.group_debts_pay_plan unless group_debts_pay_plan?
-
-    @group_debts_pay_plan = GroupDebtsPayPlan.create(group: @group)
-  end
-
-  private
-
-  def group_debts_pay_plan?
-    @group.group_debts_pay_plan.nil?
-  end
-end
-
 class DebtStepsController < ApplicationController
   add_flash_types :error
 
@@ -54,8 +19,13 @@ class DebtStepsController < ApplicationController
     @recipient = User.find(debt_step_params[:recipient_id])
     @pay_value = debt_step_params[:pay_value]
 
-    @group_debts_pay_plan = GroupDebtsPayPlanCreater.new(@group).create
-    @debt_step = DebtStepCreater.new(@group_debts_pay_plan, @debter, @recipient, @pay_value).create
+    @group_debts_pay_plan = Creaters::GroupDebtsPayPlans::GroupDebtsPayPlanCreater.new(@group).create
+    @debt_step = Creaters::DebtSteps::DebtStepCreater.new(
+      @group_debts_pay_plan,
+      @debter,
+      @recipient,
+      @pay_value
+    ).create
 
     return redirect_to group_path(@group) if @debt_step.valid?
 
