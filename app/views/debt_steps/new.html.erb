@@ -24,6 +24,11 @@
           <%= form.label :recipient_id, 'Recipient' %>
           <%= form.select :recipient_id, users_for_select %>
         </div>
+
+        <div class="row m-3">
+          <%= form.label :pay_value, 'Pay Value' %>
+          <%= form.number_field :pay_value, step: 0.01 %>
+        </div>
       </div>
 
       <%= form.submit class: 'btn btn-primary' %>

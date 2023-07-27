@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_24_115952) do
+ActiveRecord::Schema.define(version: 2023_07_26_142801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2023_07_24_115952) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "group_debts_pay_plan_id"
+    t.float "pay_value", null: false
     t.index ["debter_id"], name: "index_debt_steps_on_debter_id"
     t.index ["group_debts_pay_plan_id"], name: "index_debt_steps_on_group_debts_pay_plan_id"
     t.index ["recipient_id"], name: "index_debt_steps_on_recipient_id"
@@ -85,6 +86,16 @@ ActiveRecord::Schema.define(version: 2023_07_24_115952) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "costs", "debts"

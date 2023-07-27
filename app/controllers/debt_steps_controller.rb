@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
 class DebtStepCreater
-  attr_reader :group_debts_pay_plan, :debter, :recipient, :debt_step
+  attr_reader :group_debts_pay_plan, :debter, :recipient, :debt_step, :pay_value
 
-  def initialize(group_debts_pay_plan, debter, recipient)
+  def initialize(group_debts_pay_plan, debter, recipient, pay_value)
     @group_debts_pay_plan = group_debts_pay_plan
     @debter = debter
     @recipient = recipient
+    @pay_value = pay_value
   end
 
   def create
-    @debt_step = DebtStep.create(group_debts_pay_plan:, recipient:, debter:)
+    @debt_step = DebtStep.create(group_debts_pay_plan:, recipient:, debter:, pay_value:)
   end
 end
 
@@ -39,16 +40,22 @@ class DebtStepsController < ApplicationController
 
   def new
     @group = Group.find(params[:group_id])
-    @debt_step = DebtStep.new(**debt_step_form_fields_params)
+
+    begin
+      @debt_step = DebtStep.new(**debt_step_form_fields_params)
+    rescue ActionController::ParameterMissing
+      @debt_step = DebtStep.new
+    end
   end
 
   def create
     @group = Group.find(params[:group_id])
     @debter = User.find(debt_step_params[:debter_id])
     @recipient = User.find(debt_step_params[:recipient_id])
+    @pay_value = debt_step_params[:pay_value]
 
     @group_debts_pay_plan = GroupDebtsPayPlanCreater.new(@group).create
-    @debt_step = DebtStepCreater.new(@group_debts_pay_plan, @debter, @recipient).create
+    @debt_step = DebtStepCreater.new(@group_debts_pay_plan, @debter, @recipient, @pay_value).create
 
     return redirect_to group_path(@group) if @debt_step.valid?
 
@@ -65,11 +72,11 @@ class DebtStepsController < ApplicationController
   end
 
   def debt_step_params
-    params.require(:debt_step).permit(:debter_id, :recipient_id)
+    params.require(:debt_step).permit(:debter_id, :recipient_id, :pay_value)
   end
 
   def debt_step_form_fields_names
-    %i[debter_id recipient_id group_debts_pay_plan_id]
+    %i[debter_id recipient_id group_debts_pay_plan_id pay_value]
   end
 
   def debt_step_form_fields_params

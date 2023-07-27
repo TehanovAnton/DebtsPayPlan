@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupUserStepState < ApplicationRecord
+  has_paper_trail
+
   belongs_to :user
 
   has_one :group_member,
