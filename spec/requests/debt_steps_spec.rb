@@ -61,6 +61,16 @@ RSpec.describe 'DebtSteps', type: :request do
           post(group_debt_steps_path(group), params:)
         end.to change(GroupDebtsPayPlan, :count).by(1)
       end
+
+      it 'changes debter debt value on pay value' do
+        post(group_debt_steps_path(group), params:)
+        expect(user1.group_user_debt(group).debt_value).to eq(0)
+      end
+
+      it 'changes recipient debt value on pay value' do
+        post(group_debt_steps_path(group), params:)
+        expect(user2.group_user_debt(group).debt_value).to eq(0)
+      end
     end
   end
 end

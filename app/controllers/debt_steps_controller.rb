@@ -17,7 +17,7 @@ class DebtStepsController < ApplicationController
     @group = Group.find(params[:group_id])
     @debter = User.find(debt_step_params[:debter_id])
     @recipient = User.find(debt_step_params[:recipient_id])
-    @pay_value = debt_step_params[:pay_value]
+    @pay_value = debt_step_params[:pay_value].to_f
 
     debt_step_create_director = Services::DebtSteps::DebtStepCreateDirector.new(
       @group,
@@ -26,6 +26,7 @@ class DebtStepsController < ApplicationController
       @pay_value
     )
     debt_step_create_director.create
+
     @debt_step = debt_step_create_director.debt_step
 
     return redirect_to group_path(@group) if @debt_step.valid?
