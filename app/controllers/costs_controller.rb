@@ -9,47 +9,19 @@ class CostsController < ApplicationController
 
   def create
     @group = Group.includes(:users).find(params[:group_id])
-    cost_creater = Creaters::CostsCreaters::CostCreater.new(cost_params)
-    cost_creater.create
+    @user = User.find(params[:user_id])
+    @cost_value = cost_params[:cost_value]
 
-    Updaters::CostsUpdaters::GroupCostUpdater.new(@group, @group.cost).update
-
-    debt_value = cost_creater.cost.cost_value - @group.cost.cost_value
-    Debt.create(user: cost_creater.cost.costable, group: @group, debt_value:)
-
-    Updaters::DebtsUpdaters::GroupUsersDebtsUpdater.new(@group).update
+    Services::Costs::CostCreateDirector.new(
+      @group,
+      @user,
+      @cost_value
+    ).create
 
     redirect_to group_path(@group)
   end
 
-  def edit
-    user
-    group
-    cost
-  end
-
-  def update
-    cost.update(cost_params)
-
-    Updaters::CostsUpdaters::GroupCostUpdater.new(group, group.cost).update
-    Updaters::DebtsUpdaters::GroupUsersDebtsUpdater.new(group).update
-
-    redirect_to group_path(group)
-  end
-
   private
-
-  def group
-    @group ||= Group.find(params[:group_id])
-  end
-
-  def cost
-    @cost ||= Cost.find(params[:id])
-  end
-
-  def user
-    @user ||= User.find(params[:user_id])
-  end
 
   def cost_params
     params.require(:cost)

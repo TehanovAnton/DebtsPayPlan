@@ -19,5 +19,6 @@ FactoryBot.define do
   end
 
   factory :group_cost do
+    cost_value { 0 }
   end
 end

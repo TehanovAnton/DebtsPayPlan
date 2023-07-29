@@ -8,17 +8,7 @@ FactoryBot.define do
 
     owner { association(:user) }
 
-    trait :with_cost do
-      cost factory: :cost
-    end
-
-    trait :with_group_cost do
-      transient do
-        cost_value { 0 }
-      end
-
-      cost { association(:group_cost, cost_value:) }
-    end
+    cost { association(:group_cost) }
 
     trait :with_group_debt_pay_plan do
       group_debts_pay_plan { association(:group_debts_pay_plan) }
