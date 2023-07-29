@@ -11,7 +11,7 @@ module Creaters
       end
 
       def create
-        return if group_user_step_state
+        return @group_user_step_state if group_user_step_state
 
         GroupUserStepState.create(
           group:,

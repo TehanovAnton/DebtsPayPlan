@@ -3,7 +3,7 @@
 module Creaters
   module CostsCreaters
     class CostCreater < BaseCostCreater
-      attr_reader :costable, :cost_value, :group, :debt, :cost
+      attr_reader :costable, :cost_value, :group, :debt
 
       def initialize(costable, cost_value, group, debt)
         super()
@@ -15,18 +15,28 @@ module Creaters
       end
 
       def create
-        @cost = Cost.create(
+        cost
+        group_user_step_state
+        cost
+      end
+
+      private
+
+      def cost
+        @cost ||= Cost.create(
           costable:,
           cost_value:,
           debt:,
           group:
         )
+      end
 
-        group_user_step_state_creater.create
+      def group_user_step_state
+        @group_user_step_state ||= group_user_step_state_creater.create
       end
 
       def group_user_step_state_creater
-        @group_user_step_state_creater = Creaters::GroupUserStepStatesCreaters::GroupUserStepStateCreater.new(
+        @group_user_step_state_creater ||= Creaters::GroupUserStepStatesCreaters::GroupUserStepStateCreater.new(
           costable,
           group
         )

@@ -2,19 +2,12 @@
 
 module Services
   module Costs
-    class CostCreateDirector
-      attr_reader :group, :user, :cost_value
-
-      def initialize(group, user, cost_value)
-        @group = group
-        @user = user
-        @cost_value = cost_value
-      end
+    class CostCreateDirector < CostsCreateDirectorBase
+      register_event('costs.created')
 
       def create
+        super
         cost
-        group_cost_updater.update
-        group_users_debt_updater.update
       end
 
       private
@@ -24,7 +17,11 @@ module Services
       end
 
       def cost
-        @cost ||= cost_creater.create
+        super
+
+        @cost = cost_creater.create
+        publish_costs_created
+        @cost
       end
 
       def cost_creater

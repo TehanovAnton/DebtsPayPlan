@@ -32,6 +32,9 @@ gem "figaro"
 
 gem 'paper_trail', '~> 14.0'
 
+# dry
+gem 'dry-events', '~> 1.0', '>= 1.0.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'pry-rails'
