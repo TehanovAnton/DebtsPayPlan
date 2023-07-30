@@ -12,7 +12,6 @@ class GroupUserStepState < ApplicationRecord
           through: :group_member
 
   def change_state(cost)
-    update(cost_ids: [cost.id])
-    cost_values << cost.cost_value
+    update(cost_ids: cost_ids << cost.id)
   end
 end

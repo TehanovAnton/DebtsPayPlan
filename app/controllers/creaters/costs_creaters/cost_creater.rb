@@ -15,8 +15,8 @@ module Creaters
       end
 
       def create
-        cost
-        group_user_step_state
+        super
+        group_user_step_state.change_state(cost)
         cost
       end
 
@@ -32,7 +32,7 @@ module Creaters
       end
 
       def group_user_step_state
-        @group_user_step_state ||= group_user_step_state_creater.create
+        @group_user_step_state || init_group_user_step_state
       end
 
       def group_user_step_state_creater
