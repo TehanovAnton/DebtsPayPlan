@@ -26,7 +26,6 @@ class DebtStepsController < ApplicationController
       @pay_value
     )
     debt_step_create_director.create
-
     @debt_step = debt_step_create_director.debt_step
 
     return redirect_to group_path(@group) if @debt_step.valid?

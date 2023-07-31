@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_26_142801) do
+ActiveRecord::Schema.define(version: 2023_07_31_113233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,17 +65,6 @@ ActiveRecord::Schema.define(version: 2023_07_26_142801) do
     t.index ["group_memberable_type", "group_memberable_id"], name: "index_group_members_on_group_memberable"
   end
 
-  create_table "group_user_step_states", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "cost_ids", default: [], array: true
-    t.float "cost_values", default: [], array: true
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["cost_ids"], name: "index_group_user_step_states_on_cost_ids", using: :gin
-    t.index ["cost_values"], name: "index_group_user_step_states_on_cost_values", using: :gin
-    t.index ["user_id"], name: "index_group_user_step_states_on_user_id"
-  end
-
   create_table "groups", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -88,19 +77,8 @@ ActiveRecord::Schema.define(version: 2023_07_26_142801) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.bigint "item_id", null: false
-    t.string "event", null: false
-    t.string "whodunnit"
-    t.text "object"
-    t.datetime "created_at"
-    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
-  end
-
   add_foreign_key "costs", "debts"
   add_foreign_key "costs", "groups"
   add_foreign_key "debt_steps", "group_debts_pay_plans"
   add_foreign_key "debts", "users"
-  add_foreign_key "group_user_step_states", "users"
 end

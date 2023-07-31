@@ -6,9 +6,8 @@ groups.each do |group|
   group_users_count.times do
     FactoryBot.create(
       :user, 
-      :in_group, 
-      :with_cost, 
-      group:, 
+      in_group: group, 
+      :with_cost,
       cost_group: group,
       cost_value: (1..group_users_count^2).to_a.sample
     )

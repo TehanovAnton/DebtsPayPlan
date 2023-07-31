@@ -6,16 +6,12 @@ FactoryBot.define do
       "User #{n}"
     end
 
-    trait :in_group do
-      transient do
-        group {}
-      end
+    transient do
+      in_group {}
 
       after(:create) do |user, evaluater|
-        GroupMember.create(
-          group: evaluater.group,
-          group_memberable: user
-        )
+        group = evaluater.in_group
+        group.users << user if group
       end
     end
 

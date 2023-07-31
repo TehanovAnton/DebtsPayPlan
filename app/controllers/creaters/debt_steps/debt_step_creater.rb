@@ -3,7 +3,7 @@
 module Creaters
   module DebtSteps
     class DebtStepCreater
-      attr_reader :group_debts_pay_plan, :debter, :recipient, :debt_step, :pay_value
+      attr_reader :group_debts_pay_plan, :debter, :recipient, :pay_value
 
       def initialize(group_debts_pay_plan, debter, recipient, pay_value)
         @group_debts_pay_plan = group_debts_pay_plan
@@ -13,7 +13,13 @@ module Creaters
       end
 
       def create
-        @debt_step = DebtStep.create(group_debts_pay_plan:, recipient:, debter:, pay_value:)
+        debt_step
+      end
+
+      private
+
+      def debt_step
+        @debt_step ||= DebtStep.create(group_debts_pay_plan:, recipient:, debter:, pay_value:)
       end
     end
   end
