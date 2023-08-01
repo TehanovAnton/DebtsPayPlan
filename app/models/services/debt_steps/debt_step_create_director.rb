@@ -20,17 +20,17 @@ module Services
       end
 
       def create
-        group_debts_pay_plan_creater.create
+        group_debts_pay_plan
         debt_step
         update_user_debt(debter)
         update_user_debt(recipient)
       end
 
-      private
-
       def debt_step
         @debt_step ||= debt_step_creater.create
       end
+
+      private
 
       def user_step_state(debter)
         case user
@@ -45,13 +45,17 @@ module Services
         Creaters::GroupUserStepStatesCreaters::GroupUserStepStateCreater
       end
 
+      def group_debts_pay_plan
+        @group_debts_pay_plan ||= group.group_debts_pay_plan || group_debts_pay_plan_creater.create
+      end
+
       def group_debts_pay_plan_creater
         @group_debts_pay_plan_creater ||= Creaters::GroupDebtsPayPlans::GroupDebtsPayPlanCreater.new(group)
       end
 
       def debt_step_creater
         @debt_step_creater ||= Creaters::DebtSteps::DebtStepCreater.new(
-          group_debts_pay_plan_creater.group_debts_pay_plan,
+          group_debts_pay_plan,
           debter,
           recipient,
           pay_value

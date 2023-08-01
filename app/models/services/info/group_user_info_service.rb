@@ -34,7 +34,31 @@ module Services
       end
 
       def callculate_debt_value
-        costs_sum - group_cost_value
+        costs_sum - group_cost_value +
+          debt_steps_pay_value_sum(debter_debt_steps) -
+          debt_steps_pay_value_sum(recipient_debt_steps)
+      end
+
+      private
+
+      def debt_steps_pay_value_sum(debt_steps)
+        debt_steps.pluck(:pay_value).sum
+      end
+
+      def debter_debt_steps
+        DebtStep.joins(:group_debts_pay_plan)
+                .where(
+                  group_debts_pay_plan: { id: group.group_debts_pay_plan },
+                  debt_steps: { debter_id: user.id }
+                )
+      end
+
+      def recipient_debt_steps
+        DebtStep.joins(:group_debts_pay_plan)
+                .where(
+                  group_debts_pay_plan: { id: group.group_debts_pay_plan },
+                  debt_steps: { recipient: user.id }
+                )
       end
     end
   end

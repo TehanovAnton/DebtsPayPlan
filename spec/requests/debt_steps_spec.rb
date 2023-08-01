@@ -2,59 +2,81 @@
 
 require 'rails_helper'
 
+RSpec.shared_examples 'debt step post common specs' do
+  it 'creates debt_step' do
+    expect do
+      post(group_debt_steps_path(group), params:)
+    end.to change(DebtStep, :count).by(1)
+  end
+
+  it 'changes debter debt value on pay value' do
+    post(group_debt_steps_path(group), params:)
+
+    expect(debter.group_user_debt(group).debt_value).to eq(old_debter_debt_value + pay_value)
+  end
+
+  it 'changes recipient debt value on pay value' do
+    post(group_debt_steps_path(group), params:)
+    expect(recipient.group_user_debt(group).debt_value).to eq(old_recipient_debt_value - pay_value)
+  end
+end
+
 RSpec.describe 'DebtSteps', type: :request do
   describe 'POST create' do
     include_context 'group debter and recipient' do
-      let!(:debter_cost) do
-        FactoryBot.create(
-          :cost,
-          group:,
-          costable: debter,
-          cost_value: 1
-        )
-      end
+      include_context 'debter and recipient costs'
+      include_context 'debt step post params', 1
 
-      let!(:recipient_cost) do
-        FactoryBot.create(
-          :cost,
-          group:,
-          costable: recipient,
-          cost_value: 3
-        )
-      end
+      let!(:old_debter_debt_value) { debter.group_user_debt(group).debt_value }
 
-      let(:params) do
-        {
-          debt_step: {
-            debter_id: debter.id,
-            recipient_id: recipient.id,
-            pay_value: 1
-          }
-        }
-      end
+      let!(:old_recipient_debt_value) { recipient.group_user_debt(group).debt_value }
     end
 
     context 'first debt step in group' do
-      it 'creates debt_step' do
-        expect do
-          post(group_debt_steps_path(group), params:)
-        end.to change(DebtStep, :count).by(1)
-      end
+      include_examples 'debt step post common specs'
 
       it 'creates group_debts_pay_plan' do
         expect do
           post(group_debt_steps_path(group), params:)
         end.to change(GroupDebtsPayPlan, :count).by(1)
       end
+    end
 
-      it 'changes debter debt value on pay value' do
-        post(group_debt_steps_path(group), params:)
-        expect(debter.group_user_debt(group).debt_value).to eq(0)
+    context 'not first debt step in group' do
+      include_context 'debt step post params', 0.5
+
+      let!(:debt_step) do
+        FactoryBot.create(
+          :debt_step,
+          debter:,
+          recipient:,
+          pay_value:,
+          group:
+        )
       end
 
-      it 'changes recipient debt value on pay value' do
+      let(:group_debts_pay_plan) { debt_step.group_debts_pay_plan }
+
+      let(:created_debt_step) { DebtStep.last }
+
+      include_examples 'debt step post common specs'
+
+      it 'do not create new group_debts_pay_plan' do
+        expect do
+          post(group_debt_steps_path(group), params:)
+        end.to change(GroupDebtsPayPlan, :count).by(0)
+      end
+
+      it 'increase debt steps count in group_debts_pay_plan' do
+        expect do
+          post(group_debt_steps_path(group), params:)
+        end.to change(group_debts_pay_plan.debt_steps, :count).by(1)
+      end
+
+      it 'group_debts_pay_plpan include new debt step' do
         post(group_debt_steps_path(group), params:)
-        expect(recipient.group_user_debt(group).debt_value).to eq(0)
+
+        expect(group_debts_pay_plan.debt_steps).to include(created_debt_step)
       end
     end
   end

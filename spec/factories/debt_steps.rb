@@ -2,5 +2,20 @@
 
 FactoryBot.define do
   factory :debt_step do
+    debter {}
+    recipient {}
+    pay_value {}
+
+    transient do
+      group {}
+    end
+
+    group_debts_pay_plan do
+      association(:group_debts_pay_plan, group:)
+    end
+
+    after(:create) do |debt_step|
+      Updaters::DebtsUpdaters::GroupUsersDebtsUpdater.new(debt_step.group).update
+    end
   end
 end
