@@ -34,6 +34,18 @@ class DebtStepsController < ApplicationController
     redirect_to new_group_debt_step_path(@group, debt_step_form_fields:)
   end
 
+  def destroy
+    @group = Group.find(params[:group_id])
+    @debt_step = DebtStep.find(params[:id])
+
+    Services::DebtSteps::DebtStepDestroyDirector.new(
+      @debt_step,
+      group: @group
+    ).destroy
+
+    redirect_to group_path(@group)
+  end
+
   private
 
   def flash_errors

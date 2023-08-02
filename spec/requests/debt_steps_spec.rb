@@ -80,4 +80,39 @@ RSpec.describe 'DebtSteps', type: :request do
       end
     end
   end
+
+  describe 'DELETE group_debt_step_path' do
+    include_context 'group debter and recipient' do
+      include_context 'debter and recipient costs', 1, 3
+      include_context 'debter to recipient debt_step', 1
+
+      let(:debter_debt) { debter.group_user_debt(group) }
+
+      let(:recipient_debt) { recipient.group_user_debt(group) }
+    end
+
+    it 'destroy debt step' do
+      expect do
+        delete group_debt_step_path(group, debt_step)
+      end.to change { DebtStep.exists?(debt_step.id) }
+        .to(false)
+    end
+
+    it 'remove debt step from debts pay plan' do
+      expect do
+        delete group_debt_step_path(group, debt_step)
+      end.to change { group_debts_pay_plan.debt_steps.include?(debt_step) }
+        .to(false)
+    end
+
+    it 'updates debter debt on debt step pay value' do
+      old_debt_value = debter_debt.debt_value
+      delete group_debt_step_path(group, debt_step)
+
+      expect(debter_debt.reload.debt_value).to eq(old_debt_value - pay_value)
+    end
+
+    it 'updates recipient debt on debt step pay value' do
+    end
+  end
 end
