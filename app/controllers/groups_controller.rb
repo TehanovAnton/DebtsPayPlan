@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
+  def index
+    @user_groups = Group.joins(:users).where(
+      group_members: {
+        type: %w[GroupOwnerMember GroupMember],
+        group_memberable_type: 'User',
+        group_memberable_id: current_user.id
+      }
+    )
+  end
+
   def new
     @user = User.find(params[:user_id])
   end

@@ -35,6 +35,8 @@ gem 'paper_trail', '~> 14.0'
 # dry
 gem 'dry-events', '~> 1.0', '>= 1.0.1'
 
+gem 'devise', '~> 4.9', '>= 4.9.2'
+
 group :development, :test do
   gem 'pry-rails'
   gem 'pry-nav'

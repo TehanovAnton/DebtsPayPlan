@@ -6,6 +6,14 @@ FactoryBot.define do
       "User #{n}"
     end
 
+    sequence(:email) do |n|
+      "user_#{n}@gmail.com"
+    end
+
+    password { 'ewqqwe' }
+
+    password_confirmation { 'ewqqwe' }
+
     transient do
       in_group {}
 
