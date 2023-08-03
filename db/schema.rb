@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_03_072707) do
+ActiveRecord::Schema.define(version: 2023_08_03_073025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2023_08_03_072707) do
   create_table "costs", force: :cascade do |t|
     t.string "costable_type"
     t.bigint "costable_id"
-    t.float "cost_value", null: false
+    t.decimal "cost_value", precision: 5, scale: 2, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "group_id"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 2023_08_03_072707) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "group_debts_pay_plan_id"
-    t.float "pay_value", null: false
+    t.decimal "pay_value", precision: 5, scale: 2, null: false
     t.index ["debter_id"], name: "index_debt_steps_on_debter_id"
     t.index ["group_debts_pay_plan_id"], name: "index_debt_steps_on_group_debts_pay_plan_id"
     t.index ["recipient_id"], name: "index_debt_steps_on_recipient_id"
