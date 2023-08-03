@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root to: "groups#show"
+  
   resources :users do
     resources :groups do
       resources :costs
