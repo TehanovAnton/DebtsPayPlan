@@ -6,10 +6,14 @@ class GroupsController < ApplicationController
   end
 
   def create
-    @group = Group.create(group_params)
-    Creaters::CostsCreaters::GroupCostCreater.new(@group).create
+    @user = User.find(params[:user_id])
+    group_create_director = Services::Groups::GroupCreateDirector.new(
+      group_params[:name],
+      @user
+    )
+    group_create_director.create
 
-    redirect_to add_user_member_show_group_path(@group)
+    redirect_to add_user_member_show_group_path(group_create_director.group)
   end
 
   def show
@@ -22,30 +26,14 @@ class GroupsController < ApplicationController
 
   def add_user_member
     @group = Group.find(params[:id])
-
     @user = User.find_by(name: params[:user_name])
     @user ||= User.create(name: params[:user_name])
 
-    group_member_adder = Creaters::GroupMembersCreaters::GroupMemberAdder.new(@user, @group)
-    group_member_adder.add
-
-    debt_params = {
-      user: @user,
-      debt_value: 0,
-      group: @group
-    }
-    @debt = Debt.create(debt_params)
-
-    cost_creater_params = {
-      debt_id: @debt.id,
-      costable: @user,
-      cost_value: 0,
-      group_member_attributes: {
-        group: @group
-      }
-    }
-    cost_creater = Creaters::CostsCreaters::CostCreater.new(**cost_creater_params)
-    cost_creater.create
+    group_user_adder = Services::Groups::GroupUserAddDirector.new(
+      @group,
+      @user
+    )
+    group_user_adder.add
 
     redirect_to group_path(@group)
   end

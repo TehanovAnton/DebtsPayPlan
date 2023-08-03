@@ -20,5 +20,35 @@ RSpec.describe User, type: :model do
         end
       end
     end
+
+    describe '#group_user_step_state' do
+      let(:user) do
+        FactoryBot.create(:user)
+      end
+
+      let(:group) do
+        FactoryBot.create(:group, owner: user)
+      end
+
+      let(:cost) do
+        FactoryBot.create(
+          :cost,
+          costable: user,
+          group:
+        )
+      end
+
+      let!(:group_user_step_state) do
+        FactoryBot.create(
+          :group_user_step_state,
+          user:,
+          group:
+        )
+      end
+
+      it 'return group user step state' do
+        expect(user.group_user_step_state(group)).to eq(group_user_step_state)
+      end
+    end
   end
 end

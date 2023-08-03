@@ -30,6 +30,11 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 gem "figaro"
 
+gem 'paper_trail', '~> 14.0'
+
+# dry
+gem 'dry-events', '~> 1.0', '>= 1.0.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'pry-rails'
@@ -53,6 +58,7 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 3.26'
   gem 'selenium-webdriver', '>= 4.0.0.rc1'
+  gem 'shoulda-matchers', '~> 5.3'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
 end

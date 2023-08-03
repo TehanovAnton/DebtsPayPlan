@@ -27,20 +27,5 @@ FactoryBot.define do
 
       costs { [association(:cost, group: cost_group, cost_value:)] }
     end
-
-    trait :with_debt do
-      transient do
-        debt_group {}
-        debt_value {}
-      end
-
-      after(:create) do |user, evaluater|
-        Debt.create(
-          user:,
-          group: evaluater.debt_group,
-          debt_value: evaluater.debt_value
-        )
-      end
-    end
   end
 end

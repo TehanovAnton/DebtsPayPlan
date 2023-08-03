@@ -15,7 +15,10 @@ module Creaters
         GroupCost.create(
           cost_value: group.average_group_users_cost_value,
           costable: group,
-          group:
+          group_member_attributes: {
+            group:,
+            type: 'GroupCostMember'
+          }
         )
       end
     end

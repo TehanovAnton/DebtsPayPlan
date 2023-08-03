@@ -1,0 +1,13 @@
+<% if @group.group_debts_pay_plan %>
+  <div class="container">
+    <div class="row">
+      Steps:
+    </div>
+
+    <% @group.group_debts_pay_plan.debt_steps.each do |debt_step| %>
+      <div class="row">
+        <%= debt_step.debter.name %> to <%= debt_step.recipient.name %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

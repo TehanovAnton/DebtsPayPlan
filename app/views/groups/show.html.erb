@@ -4,7 +4,7 @@
       User
     </div>
     <div class="col">
-      User Cost
+      User Costs Sum
     </div>
     <div class="col">
       Debt
@@ -32,4 +32,6 @@
   <div class="row">
     Group Cost: <%= @group.cost&.cost_value %>
   </div>
+
+  <%= render 'group_debt_steps' %>
 </div>
