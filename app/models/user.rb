@@ -1,7 +1,4 @@
 # frozen_string_literal: true
-module UserDeviseConfig
-  
-end
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
