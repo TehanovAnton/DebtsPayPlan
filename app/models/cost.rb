@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Cost < ApplicationRecord
+  include Validations::Costs::Validation
+
   belongs_to :debt, optional: true
 
   has_one :group_member,
