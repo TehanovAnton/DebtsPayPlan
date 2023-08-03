@@ -26,13 +26,24 @@ class DebtStepsController < ApplicationController
       @pay_value
     )
     debt_step_create_director.create
-
     @debt_step = debt_step_create_director.debt_step
 
     return redirect_to group_path(@group) if @debt_step.valid?
 
     flash_errors
     redirect_to new_group_debt_step_path(@group, debt_step_form_fields:)
+  end
+
+  def destroy
+    @group = Group.find(params[:group_id])
+    @debt_step = DebtStep.find(params[:id])
+
+    Services::DebtSteps::DebtStepDestroyDirector.new(
+      @debt_step,
+      group: @group
+    ).destroy
+
+    redirect_to group_path(@group)
   end
 
   private

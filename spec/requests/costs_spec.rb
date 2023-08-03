@@ -3,38 +3,51 @@
 require 'rails_helper'
 
 RSpec.describe 'Costs', type: :request do
-  describe 'POST /groups/:group_id/users/:user_id/costs' do
-    context 'create first group cost' do
-      let!(:user) do
-        FactoryBot.create(:user)
-      end
+  describe 'POST user_group_costs' do
+    include_context 'post group_owner cost'
 
-      let!(:group) do
-        FactoryBot.create(
-          :group,
-          owner: user
-        )
-      end
-
-      let(:params) do
-        {
-          cost: {
-            group_member_attributes: { group_id: group.id },
-            costable_type: user.class.name,
-            costable_id: user.id,
-            cost_value: 1
-          }
-        }
-      end
-
+    context 'first cost in group' do
       it 'creates cost' do
-        post(user_group_costs_path(user, group), params:)
+        post(user_group_costs_path(group_owner, group), params:)
         expect(Cost.count).to eq(2)
       end
+    end
 
-      it 'creates group user debt' do
-        post(user_group_costs_path(user, group), params:)
-        expect(user.group_user_debt(group)).to be
+    describe 'debt' do
+      include_context 'post group_owner cost'
+
+      context 'first cost in group' do
+        it 'creates group user debt' do
+          post(user_group_costs_path(group_owner, group), params:)
+          expect(group_owner.group_user_debt(group)).to be
+        end
+      end
+    end
+
+    describe 'group_user_step_state' do
+      context 'first cost in group' do
+        include_context 'post group_owner cost'
+
+        it 'creates group_user_step_state' do
+          expect do
+            post(user_group_costs_path(group_owner, group), params:)
+          end.to change(GroupUserStepState.all, :count)
+            .by(1)
+        end
+      end
+
+      context 'not first cost in group' do
+        include_context 'post group_owner cost'
+
+        it 'updates group_user_step_state' do
+          2.times do
+            post(user_group_costs_path(group_owner, group), params:)
+          end
+
+          group_owner_step_state = group_owner.group_user_step_state(group)
+
+          expect(group_owner_step_state.cost_ids.count).to eq(2)
+        end
       end
     end
 

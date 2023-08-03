@@ -26,7 +26,7 @@ RSpec.describe GroupDebtsPayPlan, type: :model do
 
   describe 'debt_steps' do
     let(:group) { FactoryBot.create(:group) }
-    let(:users) { FactoryBot.create_list(:user, 2, :in_group, group:) }
+    let(:users) { FactoryBot.create_list(:user, 2, in_group: group) }
     let(:group_debts_pay_plan) { FactoryBot.create(:group_debts_pay_plan, group:) }
     let(:debt_step) do
       FactoryBot.create(:debt_step, debter: users.first, recipient: users.last, group_debts_pay_plan:)

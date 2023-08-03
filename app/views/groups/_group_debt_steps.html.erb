@@ -1,12 +1,14 @@
 <% if @group.group_debts_pay_plan %>
   <div class="container">
-    <div class="row">
-      Steps:
-    </div>
+    <% if @group.group_debts_pay_plan.debt_steps.any? %>
+      <div class="row">
+        Steps:
+      </div>
+    <% end %>
 
     <% @group.group_debts_pay_plan.debt_steps.each do |debt_step| %>
-      <div class="row">
-        <%= debt_step.debter.name %> to <%= debt_step.recipient.name %>
+      <div class="row-sm-1">
+        <%= render partial: 'debt_step', locals: { debt_step: } %>
       </div>
     <% end %>
   </div>

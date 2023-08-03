@@ -18,6 +18,8 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
+    @user = User.find(params[:user_id])
+    @cost = Cost.new
   end
 
   def add_user_member_show

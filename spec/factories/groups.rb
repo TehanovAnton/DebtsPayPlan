@@ -21,6 +21,8 @@ FactoryBot.define do
     after(:create) do |group, evluater|
       users = evluater.add_users
       group.users << users if users
+
+      Creaters::CostsCreaters::GroupCostCreater.new(group).create
     end
   end
 end

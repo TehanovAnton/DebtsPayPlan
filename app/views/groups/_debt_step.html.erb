@@ -1,0 +1,13 @@
+<div class='container '>
+  <div class='row'>
+    <div class='col-sm-2'>
+      <%= debt_step.debter.name %> to <%= debt_step.recipient.name %>
+    </div>
+
+    <div class='col'>
+      <%= form_with url: group_debt_step_path(@group, debt_step), method: :delete do |form| %>
+        <%= form.button '', type: 'submit', class: 'btn-close', 'aria-label' => 'Close' %>
+      <% end %>
+    </div>
+  </div>
+</div>

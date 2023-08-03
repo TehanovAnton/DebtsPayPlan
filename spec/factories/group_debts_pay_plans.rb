@@ -2,6 +2,14 @@
 
 FactoryBot.define do
   factory :group_debts_pay_plan do
-    group { association(:group) }
+    group {}
+
+    group_debts_pay_plan_member do
+      association(
+        :group_debts_pay_plan_member,
+        group_memberable: instance,
+        group:
+      )
+    end
   end
 end
