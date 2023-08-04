@@ -3,6 +3,8 @@
 module Creaters
   module CostsCreaters
     class CostCreater < BaseCostCreater
+      include Dry::Monads[:result]
+
       attr_reader :costable, :cost_value, :group, :debt
 
       def initialize(costable, cost_value, group, debt)
@@ -16,8 +18,12 @@ module Creaters
 
       def create
         super
-        group_user_step_state.change_state(cost)
-        cost
+
+        if cost.valid?
+          Success(cost)
+        else
+          Failure(cost.errors)
+        end
       end
 
       private
@@ -29,6 +35,8 @@ module Creaters
           debt:,
           group:
         )
+
+        @cost
       end
 
       def group_user_step_state

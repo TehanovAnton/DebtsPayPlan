@@ -46,10 +46,4 @@ class User < ApplicationRecord
          .where(group_members: { group_id: group.id })
          .first
   end
-
-  def group_user_step_state(group)
-    group_user_step_states.joins(:group)
-                          .where(groups: { id: group.id })
-                          .first
-  end
 end

@@ -13,7 +13,7 @@ module Validations
         validates :cost_value, numericality: {
           greater_than: 0,
           message: 'cant be equal and less then zero'
-        }
+        }, if: proc { |cost| cost.type == 'Cost' }
 
         validates :cost_value, numericality: {
           less_than: 1000,

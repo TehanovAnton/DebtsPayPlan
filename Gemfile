@@ -34,6 +34,7 @@ gem 'paper_trail', '~> 14.0'
 
 # dry
 gem 'dry-events', '~> 1.0', '>= 1.0.1'
+gem 'dry-monads', '~> 1.6'
 
 gem 'devise', '~> 4.9', '>= 4.9.2'
 

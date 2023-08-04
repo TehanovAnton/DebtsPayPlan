@@ -27,3 +27,18 @@ RSpec.shared_context 'post group_owner cost' do
     end
   end
 end
+
+RSpec.shared_context 'post group_owner cost params' do
+  include_context 'group context' do
+    let(:params) do
+      {
+        cost: {
+          group_member_attributes: { group_id: group.id },
+          costable_type: group_owner.class.name,
+          costable_id: group_owner.id,
+          cost_value:
+        }
+      }
+    end
+  end
+end
