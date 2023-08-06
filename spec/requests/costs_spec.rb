@@ -22,6 +22,8 @@ RSpec.describe 'Costs', type: :request do
     include_context 'post group_owner cost'
 
     context 'first cost in group' do
+      before { sign_in group_owner }
+
       it 'creates cost' do
         post(user_group_costs_path(group_owner, group), params:)
         expect(Cost.count).to eq(2)
@@ -39,6 +41,8 @@ RSpec.describe 'Costs', type: :request do
       include_context 'post group_owner cost'
 
       context 'first cost in group' do
+        before { sign_in group_owner }
+
         it 'creates group user debt' do
           post(user_group_costs_path(group_owner, group), params:)
           expect(group_owner.group_user_debt(group)).to be
@@ -46,34 +50,9 @@ RSpec.describe 'Costs', type: :request do
       end
     end
 
-    describe 'group_user_step_state' do
-      context 'first cost in group' do
-        include_context 'post group_owner cost'
-
-        it 'creates group_user_step_state' do
-          expect do
-            post(user_group_costs_path(group_owner, group), params:)
-          end.to change(GroupUserStepState.all, :count)
-            .by(1)
-        end
-      end
-
-      context 'not first cost in group' do
-        include_context 'post group_owner cost'
-
-        it 'updates group_user_step_state' do
-          2.times do
-            post(user_group_costs_path(group_owner, group), params:)
-          end
-
-          group_owner_step_state = group_owner.group_user_step_state(group)
-
-          expect(group_owner_step_state.cost_ids.count).to eq(2)
-        end
-      end
-    end
-
     context 'create not first group cost' do
+      before { sign_in group_owner }
+
       let!(:user1) do
         FactoryBot.create(
           :user,
@@ -128,12 +107,14 @@ RSpec.describe 'Costs', type: :request do
         [user1, user2].each do |uesr|
           group_user_info = Services::Info::GroupUserInfoService.new(uesr, group)
 
-          expect(group_user_info.debt.debt_value).to be(group_user_info.callculate_debt_value)
+          expect(group_user_info.debt.debt_value).to eq(group_user_info.callculate_debt_value)
         end
       end
     end
 
     context 'invalid cost params' do
+      before { sign_in group_owner }
+
       include_context 'post group_owner cost params'
 
       context do

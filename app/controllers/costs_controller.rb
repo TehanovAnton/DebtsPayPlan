@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CostsController < ApplicationController
+  before_action :authenticate_user!
+
   add_flash_types :error
 
   def new
@@ -16,7 +18,7 @@ class CostsController < ApplicationController
 
     return create_cost_failure_redirect if create_monad.failure?
 
-    group_path(@group, user_id: @user.id)
+    redirect_to group_path(@group, user_id: @user.id)
   end
 
   private

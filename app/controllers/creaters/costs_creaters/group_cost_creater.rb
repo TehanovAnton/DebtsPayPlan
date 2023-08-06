@@ -12,6 +12,8 @@ module Creaters
       end
 
       def create
+        return group.cost if group.cost
+
         GroupCost.create(
           cost_value: group.average_group_users_cost_value,
           costable: group,
