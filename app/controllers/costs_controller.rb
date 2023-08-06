@@ -13,12 +13,11 @@ class CostsController < ApplicationController
 
   def create
     @group = Group.includes(:users).find(params[:group_id])
-    @user = User.find(params[:user_id])
     @cost_value = cost_params[:cost_value]
 
     return create_cost_failure_redirect if create_monad.failure?
 
-    redirect_to group_path(@group, user_id: @user.id)
+    redirect_to group_path(@group, user_id: current_user.id)
   end
 
   private
@@ -26,7 +25,7 @@ class CostsController < ApplicationController
   def create_cost_failure_redirect
     errors = create_monad.failure
     redirect_to(
-      user_group_costs_path(@user, @group),
+      user_group_costs_path(current_user, @group),
       error: errors.full_messages.first
     )
   end
@@ -34,7 +33,7 @@ class CostsController < ApplicationController
   def create_monad
     @create_monad ||= Services::Costs::CostCreateDirector.new(
       @group,
-      @user,
+      current_user,
       @cost_value
     ).create
   end
