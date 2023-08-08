@@ -3,7 +3,9 @@
 module Services
   module Costs
     class CostCreateDirector < CostsCreateDirectorBase
-      register_event('costs.created')
+      DIRECTOR_EVENT = 'costs.created'
+
+      register_event(DIRECTOR_EVENT)
 
       def create
         super
@@ -19,9 +21,16 @@ module Services
       def cost
         super
 
-        @cost = cost_creater.create
-        publish_costs_created
-        @cost
+        if create_cost_monad
+          @cost = create_cost_monad.success
+          publish_director_event
+        end
+
+        create_cost_monad
+      end
+
+      def create_cost_monad
+        @create_cost_monad ||= cost_creater.create
       end
 
       def cost_creater

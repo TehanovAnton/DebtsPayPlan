@@ -13,9 +13,23 @@ class CostsController < ApplicationController
 
   def create
     @group = Group.includes(:users).find(params[:group_id])
-    @cost_value = cost_params[:cost_value]
+    @cost_value = cost_params(:create)[:cost_value]
 
     return create_cost_failure_redirect if create_monad.failure?
+
+    redirect_to group_path(@group, user_id: current_user.id)
+  end
+
+  def edit
+    @group = Group.find(params[:group_id])
+    @cost = Cost.find(params[:id])
+  end
+
+  def update
+    @group = Group.find(params[:group_id])
+    @cost = Cost.find(params[:id])
+
+    return update_cost_failure_redirect if update_cost_monad.failure?
 
     redirect_to group_path(@group, user_id: current_user.id)
   end
@@ -30,6 +44,14 @@ class CostsController < ApplicationController
     )
   end
 
+  def update_cost_failure_redirect
+    errors = update_cost_monad.failure
+    redirect_to(
+      edit_user_group_cost_path(current_user, @group, @cost),
+      error: errors.full_messages.first
+    )
+  end
+
   def create_monad
     @create_monad ||= Services::Costs::CostCreateDirector.new(
       @group,
@@ -38,13 +60,30 @@ class CostsController < ApplicationController
     ).create
   end
 
-  def cost_params
-    params.require(:cost)
-          .permit(
-            :costable_type,
-            :costable_id,
-            :cost_value,
-            group_member_attributes: [:group_id]
-          )
+  def update_cost_monad
+    @update_cost_monad ||= Services::Costs::CostsUpdateDirector.new(
+      @cost,
+      @group,
+      current_user,
+      cost_params(:update)
+    ).update
+  end
+
+  def cost_params(action)
+    case action
+    when :create
+      params.require(:cost)
+            .permit(
+              :costable_type,
+              :costable_id,
+              :cost_value,
+              group_member_attributes: [:group_id]
+            )
+    when :update
+      params.require(:cost)
+            .permit(
+              :cost_value
+            )
+    end
   end
 end

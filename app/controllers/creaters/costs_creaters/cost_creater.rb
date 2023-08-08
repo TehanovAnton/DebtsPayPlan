@@ -38,17 +38,6 @@ module Creaters
 
         @cost
       end
-
-      def group_user_step_state
-        @group_user_step_state || init_group_user_step_state
-      end
-
-      def group_user_step_state_creater
-        @group_user_step_state_creater ||= Creaters::GroupUserStepStatesCreaters::GroupUserStepStateCreater.new(
-          costable,
-          group
-        )
-      end
     end
   end
 end
