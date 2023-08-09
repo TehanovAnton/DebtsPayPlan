@@ -1,39 +1,41 @@
-<div class="container">
-  <div class="row">
-    <div class="col">
-      User
-    </div>
-    <div class="col">
-      User Costs Sum
-    </div>
-    <div class="col">
-      Debt
-    </div>
-  </div>
+<table class="table table-dark table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">User</th>
+      <th scope="col">Costs sum</th>
+      <th scope="col">Debt</th>
+    </tr>
+  </thead>
 
-  <% group_cost = @group.cost %>
-  <% @group.users.each do |user| %>
-  <% group_user_info = Services::Info::GroupUserInfoService.new(user, @group) %>
+  <tbody>
+    <% @group.users.each_with_index do |user, i| %>
+    <% group_user_info = Services::Info::GroupUserInfoService.new(user, @group) %>
+      <tr>
 
-    <div class="row">
-      <div class="col">
-        <%= user.name %>
-      </div>
-      <div class="col">
-        <%= group_user_info.costs_sum %>
-      </div>
-      <div class="col">
-        <%= group_user_info.debt&.debt_value %>
-      </div>
-    </div>
-  <% end %>
-  <br/>
+      <% if user == current_user %>
+        <% activity_class = "table-active" %>
+      <% else %>
+        <% activity_class = "" %>
+      <% end %>
 
-  <div class="row">
-    Group Cost: <%= @group.cost&.cost_value %>
-  </div>
+        <th scope="row" class=<%= activity_class %>>
+          <%= i + 1 %>
+        </th>
 
-  <%= render 'group_debt_steps' %>
+        <td class=<%= activity_class %> ><%= user.name %></td>
+        <td class=<%= activity_class %> ><%= group_user_info.costs_sum %></td>
+        <td class=<%= activity_class %> ><%= group_user_info.debt&.debt_value %></td>
+      </tr>
+    <% end %>
+  </tbody>
 
-  <%= render 'costs/shared/cost_form' %>
-</div>
+  <tfoot>
+    <tr>
+      <td>Group cost</td>
+      <td><%= @group.cost&.cost_value %></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
