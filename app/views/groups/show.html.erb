@@ -1,41 +1,47 @@
-<table class="table table-dark table-striped">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">User</th>
-      <th scope="col">Costs sum</th>
-      <th scope="col">Debt</th>
-    </tr>
-  </thead>
+<div class="container">
+  <div class="row py-5">
+    <div class="col">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">User</th>
+            <th scope="col">Costs sum</th>
+            <th scope="col">Debt</th>
+          </tr>
+        </thead>
 
-  <tbody>
-    <% @group.users.each_with_index do |user, i| %>
-    <% group_user_info = Services::Info::GroupUserInfoService.new(user, @group) %>
-      <tr>
+        <tbody>
+          <% @group.users.each_with_index do |user, i| %>
+          <% group_user_info = Services::Info::GroupUserInfoService.new(user, @group) %>
+            <tr>
 
-      <% if user == current_user %>
-        <% activity_class = "table-active" %>
-      <% else %>
-        <% activity_class = "" %>
-      <% end %>
+            <% if user == current_user %>
+              <% activity_class = "table-active" %>
+            <% else %>
+              <% activity_class = "" %>
+            <% end %>
 
-        <th scope="row" class=<%= activity_class %>>
-          <%= i + 1 %>
-        </th>
+              <th scope="row" class=<%= activity_class %>>
+                <%= i + 1 %>
+              </th>
 
-        <td class=<%= activity_class %> ><%= user.name %></td>
-        <td class=<%= activity_class %> ><%= group_user_info.costs_sum %></td>
-        <td class=<%= activity_class %> ><%= group_user_info.debt&.debt_value %></td>
-      </tr>
-    <% end %>
-  </tbody>
+              <td class=<%= activity_class %> ><%= user.name %></td>
+              <td class=<%= activity_class %> ><%= group_user_info.costs_sum %></td>
+              <td class=<%= activity_class %> ><%= group_user_info.debt&.debt_value %></td>
+            </tr>
+          <% end %>
+        </tbody>
 
-  <tfoot>
-    <tr>
-      <td>Group cost</td>
-      <td><%= @group.cost&.cost_value %></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tfoot>
-</table>
+        <tfoot>
+          <tr>
+            <td>Group cost</td>
+            <td><%= @group.cost&.cost_value %></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
