@@ -44,4 +44,27 @@
       </table>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th scope="col">Costs:</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% group_current_user_info = Services::Info::GroupUserInfoService.new(current_user, @group) %>
+          <% group_current_user_info.costs.each_with_index do |cost, i| %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <th><%= cost.cost_value %></th>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
