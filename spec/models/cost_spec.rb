@@ -57,7 +57,7 @@ RSpec.describe Cost, type: :model do
         context 'cost value has more than three digits before digit point' do
           include_context 'invalid cost value with error message',
                           1234,
-                          'Cost value should not has more then three-digit before decimal digit and more then ' \
+                          'Cost value should not has more then three-digit before decimal point and more then ' \
                           'two digits after'
 
           include_examples 'invalid cost'

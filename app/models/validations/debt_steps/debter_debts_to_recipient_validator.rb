@@ -5,10 +5,12 @@ module Validations
     class DebterDebtsToRecipientValidator < ActiveModel::Validator
       attr_reader :debt_step
 
+      VALIDATION_ERROR_MESSAGE = 'debter should debts to recipient'
+
       def validate(debt_step)
         @debt_step = debt_step
 
-        add_error('debter should debts to recipient') unless debter_debts_to_recipient?
+        add_error(VALIDATION_ERROR_MESSAGE) unless debter_debts_to_recipient?
       end
 
       private

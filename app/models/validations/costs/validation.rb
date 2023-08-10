@@ -17,7 +17,7 @@ module Validations
 
         validates :cost_value, numericality: {
           less_than: 1000,
-          message: 'should not has more then three-digit before decimal digit and more then two digits after'
+          message: 'should not has more then three-digit before decimal point and more then two digits after'
         }
       end
     end

@@ -49,9 +49,8 @@ class DebtStepsController < ApplicationController
   private
 
   def flash_errors
-    @debt_step.errors.each do |error|
-      flash[:error] = error.full_message
-    end
+    error = @debt_step.errors.full_messages.first
+    flash[:error] = error
   end
 
   def debt_step_params
@@ -59,7 +58,7 @@ class DebtStepsController < ApplicationController
   end
 
   def debt_step_form_fields_names
-    %i[debter_id recipient_id group_debts_pay_plan_id pay_value]
+    Services::DebtSteps::FROM_FIELDS
   end
 
   def debt_step_form_fields_params
@@ -68,10 +67,10 @@ class DebtStepsController < ApplicationController
   end
 
   def debt_step_form_fields
-    fields = debt_step_form_fields_names
+    create_form_fields_saver.form_fields
+  end
 
-    @debt_step.attributes.select do |key, _|
-      fields.include?(key.to_sym)
-    end
+  def create_form_fields_saver
+    @create_form_fields_saver ||= Services::DebtSteps::CreateFormFieldsSaver.new(@debt_step)
   end
 end
