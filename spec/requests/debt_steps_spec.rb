@@ -15,22 +15,16 @@ end
 
 RSpec.shared_examples 'sets propper flash message' do |action, flash_key|
   it 'sets propper flash message' do
-    method(action).call(request_path,params:)
+    method(action).call(request_path, params:)
 
     expect(flash[flash_key]).to match(flash_message)
   end
 end
 
-RSpec.shared_examples 'debt step post common specs' do
-  it 'creates debt_step' do
-    expect do
-      post(group_debt_steps_path(group), params:)
-    end.to change(DebtStep, :count).by(1)
-  end
-
+RSpec.shared_examples 'debt step change common specs' do |action|
   it 'changes debter debt value on pay value' do
     old_debt = Services::Info::GroupUserInfoService.new(debter, group).debt.debt_value
-    post(group_debt_steps_path(group), params:)
+    method(action).call(request_path, params:)
 
     new_debt = Services::Info::GroupUserInfoService.new(debter, group).debt.debt_value
     expect(new_debt).to eq(old_debt + pay_value)
@@ -38,10 +32,34 @@ RSpec.shared_examples 'debt step post common specs' do
 
   it 'changes recipient debt value on pay value' do
     old_debt = Services::Info::GroupUserInfoService.new(recipient, group).debt.debt_value
-    post(group_debt_steps_path(group), params:)
+    method(action).call(request_path, params:)
 
     new_debt = Services::Info::GroupUserInfoService.new(recipient, group).debt.debt_value
     expect(new_debt).to eq(old_debt - pay_value)
+  end
+end
+
+RSpec.shared_examples 'debt step post common specs' do
+  let(:request_path) { group_debt_steps_path(group) }
+
+  include_examples 'debt step change common specs', :post
+
+  it 'creates debt_step' do
+    expect do
+      post(request_path, params:)
+    end.to change(DebtStep, :count).by(1)
+  end
+end
+
+RSpec.shared_examples 'debt step put common specs' do
+  let(:request_path) { group_debt_step_path(group, debt_step) }
+
+  include_examples 'debt step change common specs', :put
+
+  it 'updates pay_value on pay_value param' do
+    put(request_path, params:)
+
+    expect(debt_step.reload.pay_value).to eq(comparable_pay_value)
   end
 end
 
@@ -51,59 +69,66 @@ RSpec.describe 'DebtSteps', type: :request do
       include_context 'group debter and recipient' do
         include_context 'debter and recipient costs'
         include_context 'debt step post params', 1
+
+        let(:pay_value) { params[:debt_step][:pay_value] }
       end
-  
+
       context 'first debt step in group' do
         include_examples 'debt step post common specs'
-  
+
         it 'creates group_debts_pay_plan' do
           expect do
             post(group_debt_steps_path(group), params:)
           end.to change(GroupDebtsPayPlan, :count).by(1)
         end
       end
-  
+
       context 'not first debt step in group' do
-        include_context 'debt step post params', 0.5
-  
-        let!(:debt_step) do
-          FactoryBot.create(
-            :debt_step,
-            debter:,
-            recipient:,
-            pay_value:,
-            group:
-          )
+        include_context 'debt step post params', 0.5 do
+          let!(:debt_step) do
+            FactoryBot.create(
+              :debt_step,
+              debter:,
+              recipient:,
+              pay_value:,
+              group:
+            )
+          end
+
+          let(:group_debts_pay_plan) { debt_step.group_debts_pay_plan }
+
+          let(:created_debt_step) { DebtStep.last }
+
+          let(:pay_value) { params[:debt_step][:pay_value] }
         end
-  
-        let(:group_debts_pay_plan) { debt_step.group_debts_pay_plan }
-  
-        let(:created_debt_step) { DebtStep.last }
-  
+
         include_examples 'debt step post common specs'
-  
+
         it 'do not create new group_debts_pay_plan' do
           expect do
             post(group_debt_steps_path(group), params:)
           end.to change(GroupDebtsPayPlan, :count).by(0)
         end
-  
+
         it 'increase debt steps count in group_debts_pay_plan' do
           expect do
             post(group_debt_steps_path(group), params:)
           end.to change(group_debts_pay_plan.debt_steps, :count).by(1)
         end
-  
+
         it 'group_debts_pay_plpan include new debt step' do
           post(group_debt_steps_path(group), params:)
-  
+
           expect(group_debts_pay_plan.debt_steps).to include(created_debt_step)
         end
       end
     end
 
     describe 'Negative scenarion' do
-      include_context 'group debter and recipient'
+      include_context 'group debter and recipient' do
+        include_context 'debter and recipient costs', 1, 3
+        include_context 'debt step post params', 0
+      end
 
       include_examples 'request redirects to', 'new debt step page', :post do
         let(:request_path) { group_debt_steps_url(group) }
@@ -204,8 +229,26 @@ RSpec.describe 'DebtSteps', type: :request do
 
       expect(debter_debt.reload.debt_value).to eq(old_debt_value - pay_value)
     end
+  end
+end
 
-    it 'updates recipient debt on debt step pay value' do
+describe 'PUT group_debt_step_path' do
+  describe 'Positive scenarion' do
+    describe 'Pay value update' do
+      include_context 'group debter and recipient' do
+        include_context 'debter and recipient costs', 1, 3
+        include_context 'debter to recipient debt_step', 0.5
+
+        let(:comparable_pay_value) { 1 }
+
+        let(:params) do
+          {
+            debt_step: { pay_value: comparable_pay_value }
+          }
+        end
+      end
+
+      include_examples 'debt step put common specs'
     end
   end
 end

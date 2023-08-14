@@ -36,14 +36,12 @@ RSpec.shared_context 'debter and recipient costs' do |debter_cv, recipient_cv|
 end
 
 RSpec.shared_context 'debt step post params' do |pay_value_param|
-  let(:pay_value) { pay_value_param }
-
   let(:params) do
     {
       debt_step: {
         debter_id: debter.id,
         recipient_id: recipient.id,
-        pay_value:
+        pay_value: pay_value_param
       }
     }
   end

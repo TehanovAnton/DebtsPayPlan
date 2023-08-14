@@ -271,7 +271,9 @@ RSpec.describe 'Costs', type: :request do
         let(:udpate_cost_value) { 1000 }
 
         include_examples 'sets propper flash message', :put, :error do
-          let(:flash_message) { 'Cost value should not has more then three-digit before decimal point and more then two digits after' }
+          let(:flash_message) do
+            'Cost value should not has more then three-digit before decimal point and more then two digits after'
+          end
         end
       end
 

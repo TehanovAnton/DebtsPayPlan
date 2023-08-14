@@ -34,6 +34,15 @@ class DebtStepsController < ApplicationController
     redirect_to new_group_debt_step_path(@group, debt_step_form_fields:)
   end
 
+  def update
+    @group = Group.find(params[:group_id])
+    @debt_step = DebtStep.find(params[:id])
+
+    return redirect_to(group_path(@group)) if update_debt_step_monad.success?
+
+    update_debt_step_failure_redirect
+  end
+
   def destroy
     @group = Group.find(params[:group_id])
     @debt_step = DebtStep.find(params[:id])
@@ -47,6 +56,22 @@ class DebtStepsController < ApplicationController
   end
 
   private
+
+  def update_debt_step_failure_redirect
+    errors = update_debt_step_monad.failure
+    redirect_to(
+      edit_group_debt_step_path(@group, @debt_step),
+      error: errors.full_messages.first
+    )
+  end
+
+  def update_debt_step_monad
+    @update_debt_step_monad = Services::DebtSteps::DebtStepUpdateDirector.new(
+      @debt_step,
+      @group,
+      debt_step_params
+    ).udpate
+  end
 
   def flash_errors
     error = @debt_step.errors.full_messages.first
