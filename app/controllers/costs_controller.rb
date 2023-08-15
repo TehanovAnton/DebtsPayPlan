@@ -34,6 +34,15 @@ class CostsController < ApplicationController
     redirect_to group_path(@group, user_id: current_user.id)
   end
 
+  def destroy
+    @group = Group.find(params[:group_id])
+    @cost = Cost.find(params[:id])
+
+    return destroy_cost_failure_redirect if destroy_cost_monad.failure?
+
+    redirect_to group_path(@group, user_id: current_user.id)
+  end
+
   private
 
   def create_cost_failure_redirect
@@ -52,6 +61,14 @@ class CostsController < ApplicationController
     )
   end
 
+  def destroy_cost_failure_redirect
+    error = destroy_cost_monad.failure
+    redirect_to(
+      edit_user_group_cost_path(current_user, @group, @cost),
+      error:
+    )
+  end
+
   def create_monad
     @create_monad ||= Services::Costs::CostCreateDirector.new(
       @group,
@@ -67,6 +84,13 @@ class CostsController < ApplicationController
       current_user,
       cost_params(:update)
     ).update
+  end
+
+  def destroy_cost_monad
+    @destroy_cost_monad ||= Services::Costs::CostDestroyDirector.new(
+      @cost,
+      @group
+    ).destroy
   end
 
   def cost_params(action)

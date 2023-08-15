@@ -286,4 +286,38 @@ RSpec.describe 'Costs', type: :request do
       end
     end
   end
+
+  describe 'DELETE user_group_cost_path' do
+    before { sign_in group_owner }
+
+    include_context 'group context' do
+      let(:cost_value) { 1 }
+
+      let!(:cost) do
+        FactoryBot.create(
+          :cost,
+          costable: group_owner,
+          cost_value:,
+          group:
+        )
+      end
+
+      let(:request_path) { user_group_cost_path(group_owner, group, cost) }
+
+      let(:updated_group_cost_value) { 0 }
+
+      let(:params) {}
+
+      let(:users) { [group_owner] }
+    end
+
+    include_examples 'updates group cost', :delete
+    include_examples 'updates group users debts', :delete
+
+    it 'destroys user cost' do
+      delete(request_path)
+
+      expect(Cost.exists?(cost.id)).to be(false)
+    end
+  end
 end

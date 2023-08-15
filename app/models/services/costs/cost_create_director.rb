@@ -41,14 +41,6 @@ module Services
           debt
         )
       end
-
-      def group_cost_updater
-        @group_cost_updater ||= Updaters::CostsUpdaters::GroupCostUpdater.new(group, group.cost)
-      end
-
-      def group_users_debt_updater
-        @group_users_debt_updater ||= Updaters::DebtsUpdaters::GroupUsersDebtsUpdater.new(group)
-      end
     end
   end
 end

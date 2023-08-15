@@ -24,6 +24,14 @@ module Services
       def deirector_event
         self.class::DIRECTOR_EVENT
       end
+
+      def group_cost_updater
+        @group_cost_updater ||= Updaters::CostsUpdaters::GroupCostUpdater.new(group, group.cost)
+      end
+
+      def group_users_debt_updater
+        @group_users_debt_updater ||= Updaters::DebtsUpdaters::GroupUsersDebtsUpdater.new(group)
+      end
     end
   end
 end
