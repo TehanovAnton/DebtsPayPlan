@@ -21,28 +21,32 @@ RSpec.shared_examples 'sets propper flash message' do |action, flash_key|
   end
 end
 
-RSpec.shared_examples 'debt step change common specs' do |action|
-  it 'changes debter debt value on pay value' do
+RSpec.shared_examples 'debt step change common specs' do |action, change_value_name|
+  it "changes debter debt value on #{change_value_name}" do
     old_debt = Services::Info::GroupUserInfoService.new(debter, group).debt.debt_value
     method(action).call(request_path, params:)
 
     new_debt = Services::Info::GroupUserInfoService.new(debter, group).debt.debt_value
-    expect(new_debt).to eq(old_debt + pay_value)
+    expect(new_debt).to eq(old_debt + debt_decrease * comparable_value)
   end
 
-  it 'changes recipient debt value on pay value' do
+  it "changes recipient debt value on #{change_value_name}" do
     old_debt = Services::Info::GroupUserInfoService.new(recipient, group).debt.debt_value
     method(action).call(request_path, params:)
 
     new_debt = Services::Info::GroupUserInfoService.new(recipient, group).debt.debt_value
-    expect(new_debt).to eq(old_debt - pay_value)
+    expect(new_debt).to eq(old_debt - debt_decrease * comparable_value)
   end
 end
 
 RSpec.shared_examples 'debt step post common specs' do
   let(:request_path) { group_debt_steps_path(group) }
 
-  include_examples 'debt step change common specs', :post
+  let(:debt_decrease) { 1 }
+
+  let(:comparable_value) { pay_value }
+
+  include_examples 'debt step change common specs', :post, 'debt step value'
 
   it 'creates debt_step' do
     expect do
@@ -54,12 +58,26 @@ end
 RSpec.shared_examples 'debt step put common specs' do
   let(:request_path) { group_debt_step_path(group, debt_step) }
 
-  include_examples 'debt step change common specs', :put
+  include_examples 'debt step change common specs', :put, 'debt step value'
 
   it 'updates pay_value on pay_value param' do
     put(request_path, params:)
 
-    expect(debt_step.reload.pay_value).to eq(comparable_pay_value)
+    expect(debt_step.reload.pay_value).to eq(update_debt_step_value)
+  end
+end
+
+RSpec.shared_examples 'debt step delete common specs' do
+  include_examples 'debt step change common specs', :delete, 'debt step value'
+
+  let(:debt_decrease) { -1 }
+
+  let(:comparable_value) { debt_step.pay_value }
+
+  it 'destroyes debt step' do
+    delete(request_path)
+
+    expect(DebtStep.exists?(debt_step.id)).to be(false)
   end
 end
 
@@ -204,31 +222,12 @@ RSpec.describe 'DebtSteps', type: :request do
       include_context 'debter and recipient costs', 1, 3
       include_context 'debter to recipient debt_step', 1
 
-      let(:debter_debt) { debter.group_user_debt(group) }
+      let(:request_path) { group_debt_step_path(group, debt_step) }
 
-      let(:recipient_debt) { recipient.group_user_debt(group) }
+      let(:params) {}
     end
 
-    it 'destroy debt step' do
-      expect do
-        delete group_debt_step_path(group, debt_step)
-      end.to change { DebtStep.exists?(debt_step.id) }
-        .to(false)
-    end
-
-    it 'remove debt step from debts pay plan' do
-      expect do
-        delete group_debt_step_path(group, debt_step)
-      end.to change { group_debts_pay_plan.debt_steps.include?(debt_step) }
-        .to(false)
-    end
-
-    it 'updates debter debt on debt step pay value' do
-      old_debt_value = debter_debt.debt_value
-      delete group_debt_step_path(group, debt_step)
-
-      expect(debter_debt.reload.debt_value).to eq(old_debt_value - pay_value)
-    end
+    include_examples 'debt step delete common specs'
   end
 end
 
@@ -237,13 +236,17 @@ describe 'PUT group_debt_step_path' do
     describe 'Pay value update' do
       include_context 'group debter and recipient' do
         include_context 'debter and recipient costs', 1, 3
-        include_context 'debter to recipient debt_step', 0.5
+        include_context 'debter to recipient debt_step', 1
 
-        let(:comparable_pay_value) { 1 }
+        let(:update_debt_step_value) { 0.5 }
+
+        let(:comparable_value) { (debt_step.pay_value - update_debt_step_value).abs }
+
+        let(:debt_decrease) { debt_step.pay_value > update_debt_step_value ? -1 : 1 }
 
         let(:params) do
           {
-            debt_step: { pay_value: comparable_pay_value }
+            debt_step: { pay_value: update_debt_step_value }
           }
         end
       end

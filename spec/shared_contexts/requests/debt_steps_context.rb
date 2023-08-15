@@ -48,14 +48,12 @@ RSpec.shared_context 'debt step post params' do |pay_value_param|
 end
 
 RSpec.shared_context 'debter to recipient debt_step' do |pay_value_param|
-  let(:pay_value) { pay_value_param }
-
   let!(:debt_step) do
     FactoryBot.create(
       :debt_step,
       debter:,
       recipient:,
-      pay_value:,
+      pay_value: pay_value_param,
       group:
     )
   end

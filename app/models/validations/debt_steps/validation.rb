@@ -26,7 +26,7 @@ module Validations
           message: WRONG_NUMBER
         }
 
-        validates_with Validations::DebtSteps::DebterDebtsToRecipientValidator
+        validates_with Validations::DebtSteps::DebterDebtsToRecipientValidator, on: :create
       end
     end
   end
