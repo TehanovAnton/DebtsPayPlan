@@ -1,0 +1,17 @@
+input.form-control.number-field-controll::placeholder {
+  color: #972fff;
+}
+
+.form-select.select-field-controll, .form-control.number-field-controll {
+  background-color: #070708;
+  color: #972fff;
+  border-color: #972fff;
+}
+
+form {
+  .btn {
+    --bs-btn-hover-bg: #27282a;
+    --bs-btn-bg: #27282a;
+    --bs-btn-color: #972fff;
+  }
+}

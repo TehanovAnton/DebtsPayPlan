@@ -1,0 +1,25 @@
+  <table class="table table-dark table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th scope="col">Debt steps:</th>
+        <th scope="col">Pay values:</th>
+      </tr>
+    </thead>
+
+    <% if debts_pay_plan?(@group) %>
+      <tbody>
+        <% debt_steps(@group).each_with_index do |debt_step, i| %>
+          <tr>
+            <td><%= i + 1 %></td>
+
+            <th>
+              <%= debter_name(debt_step) %> to <%= recipient_name(debt_step) %>
+            </th>
+
+            <th><%= pay_value(debt_step) %></th>
+          </tr>
+        <% end %>
+      </tbody>
+    <% end %>
+  </table>

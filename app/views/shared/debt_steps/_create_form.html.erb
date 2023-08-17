@@ -1,0 +1,23 @@
+<%= form_with url: group_debt_steps_path(@group), model: debt_step do |form| %>
+  <div class="container">
+    <div class="row m-3">
+      <%= form.label :debter_id, 'Debter' %>
+      <%= form.select :debter_id, users_for_select(@group), {}, { class: 'form-select select-field-controll' } %>
+    </div>
+
+    <div class="row m-3">
+      <%= form.label :recipient_id, 'Recipient' %>
+      <%= form.select :recipient_id, users_for_select(@group), {}, { class: 'form-select select-field-controll' } %>
+    </div>
+
+    <div class="row m-3">
+      <%= form.number_field :pay_value, 
+                            step: 0.01,
+                            class: 'form-control number-field-controll',
+                            placeholder: 'Pay Value'
+      %>
+    </div>
+  </div>
+
+  <%= form.submit class: 'btn' %>
+<% end %>

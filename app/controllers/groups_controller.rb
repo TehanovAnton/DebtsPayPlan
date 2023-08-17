@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
+  helper [Groups::GroupHelpers, DebtSteps::DebtStepHelpers]
+
   def index
     @user_groups = Group.joins(:users).where(
       group_members: {
@@ -28,7 +30,6 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
-    @user = User.find(params[:user_id])
     @cost = Cost.new
   end
 
