@@ -1,0 +1,11 @@
+<% group_user_info = group_user_info(user, group) %>
+<% activity_class = user_row_activity_class(user) %>
+<tr>
+  <th scope="row" class=<%= activity_class %>>
+    <%= index + 1 %>
+  </th>
+
+  <td class=<%= activity_class %> ><%= user.name %></td>
+  <td class=<%= activity_class %> ><%= group_user_info.costs_sum %></td>
+  <td class=<%= activity_class %> ><%= group_user_debt_value(group_user_info) %></td>
+</tr>

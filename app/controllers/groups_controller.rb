@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupsController < ApplicationController
+  before_action :authenticate_user!
+
   helper [Groups::GroupHelpers, DebtSteps::DebtStepHelpers]
 
   def index

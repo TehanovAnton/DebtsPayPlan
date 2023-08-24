@@ -13,33 +13,12 @@
 
         <tbody>
           <% @group.users.each_with_index do |user, i| %>
-          <% group_user_info = Services::Info::GroupUserInfoService.new(user, @group) %>
-            <tr>
-
-            <% if user == current_user %>
-              <% activity_class = "table-active" %>
-            <% else %>
-              <% activity_class = "" %>
-            <% end %>
-
-              <th scope="row" class=<%= activity_class %>>
-                <%= i + 1 %>
-              </th>
-
-              <td class=<%= activity_class %> ><%= user.name %></td>
-              <td class=<%= activity_class %> ><%= group_user_info.costs_sum %></td>
-              <td class=<%= activity_class %> ><%= group_user_info.debt&.debt_value %></td>
-            </tr>
+            <%= render partial: '/shared/groups/group_user_row', locals: { user:, group: @group, index: i } %>
           <% end %>
         </tbody>
 
         <tfoot>
-          <tr>
-            <td>Group cost</td>
-            <td><%= group_cost(@group) %></td>
-            <td></td>
-            <td></td>
-          </tr>
+          <%= render partial: '/shared/group/group_cost_row', locals: { group: @group } %>
         </tfoot>
       </table>
     </div>
@@ -56,7 +35,7 @@
               <div class="carousel-item active">
                 <div class="row">
                   <div class="col text-center">
-                    <%= render '/shared/groups/group_user_costs_table' %>
+                    <%= render '/shared/groups/group_user_costs' %>
                   </div>
                 </div>
               </div>

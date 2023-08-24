@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DebtSteps
   module DebtStepHelpers
     def debter_name(debt_step)
