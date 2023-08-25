@@ -20,8 +20,8 @@ module Groups
       Services::Info::GroupUserInfoService.new(user, group)
     end
 
-    def user_row_activity_class(user)
-      user == current_user ? row_active_class : ''
+    def user_row_activity_class(user, cur_user)
+      user == cur_user ? row_active_class : ''
     end
 
     def row_active_class
@@ -30,6 +30,10 @@ module Groups
 
     def group_user_debt_value(group_user_info_obj)
       Maybe(group_user_info_obj.debt).fmap(&:debt_value).value_or('')
+    end
+
+    def group_user_row_id(group, user)
+      "row-group-#{group.id}-user-#{user.id}"
     end
   end
 end

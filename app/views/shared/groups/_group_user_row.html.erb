@@ -1,6 +1,8 @@
 <% group_user_info = group_user_info(user, group) %>
-<% activity_class = user_row_activity_class(user) %>
-<tr>
+<% activity_class = user_row_activity_class(user, cur_user) %>
+<% user_row_id = group_user_row_id(group, user) %>
+
+<tr id=<%= user_row_id %>>
   <th scope="row" class=<%= activity_class %>>
     <%= index + 1 %>
   </th>

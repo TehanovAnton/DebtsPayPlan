@@ -17,7 +17,7 @@ class CostsController < ApplicationController
 
     return create_cost_failure_redirect if create_monad.failure?
 
-    redirect_to group_path(@group, user_id: current_user.id)
+    broadcast_to_group_cost_channel
   end
 
   def edit
@@ -44,6 +44,22 @@ class CostsController < ApplicationController
   end
 
   private
+
+  # move to cost create director
+  def broadcast_to_group_cost_channel
+    ActionCable.server.broadcast(group_costs_channel_room, { group_user_row: })
+  end
+
+  def group_costs_channel_room
+    "group_costs_Group #{@group.id} User #{current_user.id}"
+  end
+
+  def group_user_row
+    GroupsController.render(
+      partial: '/shared/groups/group_user_row',
+      locals: { cur_user: current_user, user: current_user, group: @group, index: -1 }
+    ).squish
+  end
 
   def create_cost_failure_redirect
     errors = create_monad.failure

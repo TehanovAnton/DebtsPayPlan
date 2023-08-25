@@ -1,3 +1,5 @@
+<%= javascript_pack_tag 'group_costs_channel' %>
+
 <div class="container">
   <div class="row py-5">
     <div class="col group-table">
@@ -13,12 +15,12 @@
 
         <tbody>
           <% @group.users.each_with_index do |user, i| %>
-            <%= render partial: '/shared/groups/group_user_row', locals: { user:, group: @group, index: i } %>
+          <%= render partial: '/shared/groups/group_user_row', locals: { cur_user: current_user, user:, group: @group, index: i } %>
           <% end %>
         </tbody>
 
         <tfoot>
-          <%= render partial: '/shared/group/group_cost_row', locals: { group: @group } %>
+          <%= render partial: '/shared/groups/group_cost_row', locals: { group: @group } %>
         </tfoot>
       </table>
     </div>
