@@ -1,6 +1,8 @@
-<tr>
+<tr id='group-cost-row'>
   <td>Group cost</td>
-  <td><%= group_cost(group) %></td>
+  <td id='group-cost-row-value-element'>
+    <%= render partial: 'shared/groups/group_cost_row_value_element', locals: { group: } %>
+  </td>
   <td></td>
   <td></td>
 </tr>

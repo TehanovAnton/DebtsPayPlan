@@ -47,17 +47,25 @@ class CostsController < ApplicationController
 
   # move to cost create director
   def broadcast_to_group_cost_channel
-    ActionCable.server.broadcast(group_costs_channel_room, { group_user_row: })
+    ActionCable.server.broadcast(group_costs_channel_room, 
+      { group_user_row_costs_sum_value:, group_cost_row_value_element: })
   end
 
   def group_costs_channel_room
     "group_costs_Group #{@group.id} User #{current_user.id}"
   end
 
-  def group_user_row
+  def group_user_row_costs_sum_value
     GroupsController.render(
-      partial: '/shared/groups/group_user_row',
-      locals: { cur_user: current_user, user: current_user, group: @group, index: -1 }
+      partial: '/shared/groups/group_user_row_costs_sum_value_element',
+      locals: { user: current_user, group: @group }
+    ).squish
+  end
+
+  def group_cost_row_value_element
+    GroupsController.render(
+      partial: '/shared/groups/group_cost_row_value_element',
+      locals: { group: @group }
     ).squish
   end
 

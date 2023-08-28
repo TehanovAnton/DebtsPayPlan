@@ -35,5 +35,13 @@ module Groups
     def group_user_row_id(group, user)
       "row-group-#{group.id}-user-#{user.id}"
     end
+
+    def group_user_row_costs_sum_value_element_id(group, user)
+      "group-#{group.id}-user-#{user.id}-costs-sum-value-element"
+    end
+
+    def group_user_costs_sum(group, user)
+      Services::Info::GroupUserInfoService.new(user, group).costs_sum
+    end
   end
 end
