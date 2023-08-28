@@ -18,20 +18,30 @@ let channelRoom = () => {
   return `Group ${urlGroupId} User ${urlUserId}`
 }
 
-let groupUserRowId = () => `row-group-${urlGroupId}-user-${urlUserId}`
 
-let findGroupUserRow = () => {
-  return document.getElementById(groupUserRowId());
+let findElement = (elementId) => {
+  return document.getElementById(elementId)
 }
 
-let updateGroupUserRow = (renderedGroupUserRow) => {
-  const newRow = document.createElement('tr');
-  newRow.innerHTML = renderedGroupUserRow;
+let entityCostsSumValueElement = (entity) => {
+  let valueElement = ''
+  switch (entity) {
+    case 'users':
+      valueElement = `group-${urlGroupId}-user-${urlUserId}-costs-sum-value-element`
+      break;
 
-  const groupUserRow = findGroupUserRow()
-  groupUserRow.parentNode.replaceChild(newRow, groupUserRow);
+    case 'groups':
+      valueElement = 'group-cost-row-value-element'
+      break;
+  }
+
+  return valueElement
 }
 
+let updateEntityCostValue = (entity, renderedHtml) => {
+  const element = findElement(entityCostsSumValueElement(entity))
+  element.innerHTML = renderedHtml;
+}
 
 consumer.subscriptions.create(
   {
@@ -48,7 +58,8 @@ consumer.subscriptions.create(
     },
 
     received(data) {
-      updateGroupUserRow(data['group_user_row'])
+      updateEntityCostValue('users', data['group_user_row_costs_sum_value'])
+      updateEntityCostValue('groups', data['group_cost_row_value_element'])
     }
   }
 );
