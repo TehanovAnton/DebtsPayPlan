@@ -11,5 +11,7 @@
   <td id=<%= group_user_row_costs_sum_value_element_id(group, cur_user) %> class=<%= activity_class %> >
     <%= render partial: 'shared/groups/group_user_row_costs_sum_value_element', locals: { group:, user: } %>
   </td>
-  <td class=<%= activity_class %> ><%= group_user_debt_value(group_user_info) %></td>
+  <td id=<%= group_user_row_debt_value_element_id(group, cur_user) %> class=<%= activity_class %> >
+    <%= render partial: 'shared/groups/group_user_row_debt_value_element', locals: { group:, user: } %>
+  </td>
 </tr>

@@ -28,8 +28,9 @@ module Groups
       'table-active'
     end
 
-    def group_user_debt_value(group_user_info_obj)
-      Maybe(group_user_info_obj.debt).fmap(&:debt_value).value_or('')
+    def group_user_debt_value(group, user)
+      group_user_info_obj = Services::Info::GroupUserInfoService.new(group, user)
+      Maybe(group_user_info_obj.debt).fmap(&:debt_value).value_or(0)
     end
 
     def group_user_row_id(group, user)
@@ -41,7 +42,12 @@ module Groups
     end
 
     def group_user_costs_sum(group, user)
-      Services::Info::GroupUserInfoService.new(user, group).costs_sum
+      group_user_info_obj = Services::Info::GroupUserInfoService.new(user, group)
+      Maybe(group_user_info_obj).fmap(&:costs_sum).value_or(0)
+    end
+
+    def group_user_row_debt_value_element_id(group, user)
+      "group-#{group.id}-user-#{user.id}-row-debt-value-element"
     end
   end
 end
