@@ -33,6 +33,7 @@ class GroupsController < ApplicationController
   def show
     @group = Group.find(params[:id])
     @cost = Cost.new
+    cookies[:current_user_id] = current_user.id
   end
 
   def add_user_member_show
