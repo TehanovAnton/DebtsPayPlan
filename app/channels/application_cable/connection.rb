@@ -17,7 +17,7 @@ module ApplicationCable
     end
 
     def maybe_signed_user
-      @maybe_signed_user ||= Maybe(User.find_by(id: cookies[:curent_user_id].to_i))
+      @maybe_signed_user ||= Maybe(User.find_by(id: cookies[:current_user_id].to_i))
     end
   end
 end
