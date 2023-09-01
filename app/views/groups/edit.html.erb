@@ -1,0 +1,6 @@
+<div class="container">
+  <%= form_with(model: @group, url: group_path(@group), method: :put) do |form| %>
+    <%= form.text_field :name %>
+    <%= form.submit "Send" %>
+  <% end %>
+</div>

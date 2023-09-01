@@ -2,6 +2,10 @@
 
 <div class="container">
   <div class="row py-5">
+    <%= link_to @group.name, edit_group_path(@group) %>
+  </div>
+
+  <div class="row py-5">
     <div class="col group-table">
       <table class="table table-dark table-striped">
         <thead>

@@ -2,6 +2,7 @@
 
 class GroupsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_group, only: %i[edit update]
 
   helper [Groups::GroupHelpers, DebtSteps::DebtStepHelpers]
 
@@ -54,7 +55,22 @@ class GroupsController < ApplicationController
     redirect_to group_path(@group)
   end
 
+  def edit
+  end
+
+  def update
+    @group.update(group_params)
+
+    respond_to do |format|
+      format.html { redirect_to @group }
+    end
+  end
+
   private
+
+  def set_group
+    @group = Group.find(params[:id])
+  end
 
   def group_params
     params.require(:group)
