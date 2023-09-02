@@ -60,8 +60,7 @@ class GroupsController < ApplicationController
     redirect_to group_path(@group)
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     @group.update(group_params)
@@ -74,7 +73,8 @@ class GroupsController < ApplicationController
   private
 
   def render_turbo_stream_group_table
-    render(turbo_stream: turbo_stream.replace('group-table', partial: '/shared/groups/group_table', locals: { group: @group, cur_user: current_user }))
+    render(turbo_stream: turbo_stream.replace('group-table', partial: '/shared/groups/group_table',
+                                                             locals: { group: @group, cur_user: current_user }))
   end
 
   def set_group
