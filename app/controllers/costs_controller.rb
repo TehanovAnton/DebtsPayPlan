@@ -5,6 +5,9 @@ class CostsController < ApplicationController
 
   add_flash_types :error
 
+  # TODO: make controller own helpers
+  helper [Groups::GroupHelpers]
+
   def new
     @cost = Cost.new
     @user = User.find(params[:user_id])
@@ -17,7 +20,14 @@ class CostsController < ApplicationController
 
     return create_cost_failure_redirect if create_monad.failure?
 
-    broadcast_to_group_cost_channel
+    respond_to do |format|
+      # TODO: try to respond turbo from show
+      format.turbo_stream do
+        render(turbo_stream: turbo_stream.replace('group-table', partial: '/shared/groups/group_table', locals: { group: @group, cur_user: current_user }))
+      end
+
+      format.html { redirect_to @group }
+    end
   end
 
   def edit

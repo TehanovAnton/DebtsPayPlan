@@ -7,30 +7,7 @@
     <% end %>
   </div>
 
-  <div class="row py-5">
-    <div class="col group-table">
-      <table class="table table-dark table-striped">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">User</th>
-            <th scope="col">Costs sum</th>
-            <th scope="col">Debt</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @group.users.each_with_index do |user, i| %>
-          <%= render partial: '/shared/groups/group_user_row', locals: { cur_user: current_user, user:, group: @group, index: i } %>
-          <% end %>
-        </tbody>
-
-        <tfoot>
-          <%= render partial: '/shared/groups/group_cost_row', locals: { group: @group } %>
-        </tfoot>
-      </table>
-    </div>
-  </div>
+  <%= render partial: '/shared/groups/group_table', locals: { group: @group, cur_user: current_user } %>
 
  <div class="row px-3">
     <div class="col py-3 sections-nav">
