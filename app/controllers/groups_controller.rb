@@ -37,7 +37,17 @@ class GroupsController < ApplicationController
     cookies[:current_user_id] = current_user.id
 
     respond_to do |format|
-      format.turbo_stream { render_turbo_stream_group_table }
+      format.turbo_stream do
+        render(turbo_stream: [
+          turbo_stream.replace('group-table',
+                               partial: '/shared/groups/group_table',
+                               locals: { group: @group, cur_user: current_user }),
+          turbo_stream.replace("user_costs",
+                               partial: '/shared/groups/group_user_costs',
+                               locals: { cur_user: current_user, group: @group })
+        ])
+      end
+
       format.html { render 'show' }
     end
   end
@@ -71,11 +81,6 @@ class GroupsController < ApplicationController
   end
 
   private
-
-  def render_turbo_stream_group_table
-    render(turbo_stream: turbo_stream.replace('group-table', partial: '/shared/groups/group_table',
-                                                             locals: { group: @group, cur_user: current_user }))
-  end
 
   def set_group
     @group = Group.find(params[:id])
