@@ -8,10 +8,12 @@
   </th>
 
   <td class=<%= activity_class %> ><%= user.name %></td>
-  <td id=<%= group_user_row_costs_sum_value_element_id(group, cur_user) %> class=<%= activity_class %> >
-    <%= render partial: 'shared/groups/group_user_row_costs_sum_value_element', locals: { group:, user: } %>
+
+  <td class=<%= activity_class %> >
+    <%= group_user_info.costs_sum %>
   </td>
-  <td id=<%= group_user_row_debt_value_element_id(group, cur_user) %> class=<%= activity_class %> >
-    <%= render partial: 'shared/groups/group_user_row_debt_value_element', locals: { group:, user: } %>
+
+  <td class=<%= activity_class %> >
+    <%= group_user_info.debt.debt_value %>
   </td>
 </tr>

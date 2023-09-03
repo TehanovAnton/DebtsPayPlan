@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupCostsChannel < ApplicationCable::Channel
   include Dry::Monads[:maybe, :result]
 

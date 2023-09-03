@@ -2,6 +2,7 @@
 
 class GroupsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_group, only: %i[edit update]
 
   helper [Groups::GroupHelpers, DebtSteps::DebtStepHelpers]
 
@@ -34,6 +35,21 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @cost = Cost.new
     cookies[:current_user_id] = current_user.id
+
+    respond_to do |format|
+      format.turbo_stream do
+        render(turbo_stream: [
+          turbo_stream.replace('group-table',
+                               partial: '/shared/groups/group_table',
+                               locals: { group: @group, cur_user: current_user }),
+          turbo_stream.replace("user_costs",
+                               partial: '/shared/groups/group_user_costs',
+                               locals: { cur_user: current_user, group: @group })
+        ])
+      end
+
+      format.html { render 'show' }
+    end
   end
 
   def add_user_member_show
@@ -54,7 +70,21 @@ class GroupsController < ApplicationController
     redirect_to group_path(@group)
   end
 
+  def edit; end
+
+  def update
+    @group.update(group_params)
+
+    respond_to do |format|
+      format.html { redirect_to @group }
+    end
+  end
+
   private
+
+  def set_group
+    @group = Group.find(params[:id])
+  end
 
   def group_params
     params.require(:group)

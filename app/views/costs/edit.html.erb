@@ -1,9 +1,20 @@
-<div class="container">
-  <div class="row">
-    <%= form_with url: user_group_cost_path(current_user, @group, @cost), model: @cost do |form| %>
-      <%= form.number_field :cost_value %>
+<%= turbo_frame_tag 'user_costs' do %>
+  <div class="container">
+    <div class="row">
+      <%= form_with url: user_group_cost_path(current_user, @group, @cost), model: @cost do |form| %>
+        <%= form.number_field :cost_value %>
 
-      <%= form.submit %>
-    <% end %>
+        <%= form.submit %>
+      <% end %>
+    </div>
+
+<%
+=begin%>
+  TODO: create special action for rendering costs table
+  Show action render extra partials  
+<%
+=end%>
+
+    <%= link_to 'Costs', @group %>
   </div>
-</div>
+<% end %>

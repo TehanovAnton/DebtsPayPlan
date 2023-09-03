@@ -1,0 +1,8 @@
+<div class="container">
+  <%= turbo_frame_tag 'group' do %>
+    <%= form_with(model: @group, url: group_path(@group), method: :put) do |form| %>
+      <%= form.text_field :name %>
+      <%= form.submit "Send" %>
+    <% end %>
+   <% end %>
+</div>

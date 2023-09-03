@@ -5,6 +5,8 @@ class CostsController < ApplicationController
 
   add_flash_types :error
 
+  helper [Groups::GroupHelpers]
+
   def new
     @cost = Cost.new
     @user = User.find(params[:user_id])
@@ -17,7 +19,7 @@ class CostsController < ApplicationController
 
     return create_cost_failure_redirect if create_monad.failure?
 
-    broadcast_to_group_cost_channel
+    redirect_to @group
   end
 
   def edit
@@ -37,37 +39,25 @@ class CostsController < ApplicationController
   def destroy
     @group = Group.find(params[:group_id])
     @cost = Cost.find(params[:id])
+    @user_costs_table_row_id = helpers.user_costs_table_row_id(current_user, @cost)
 
     return destroy_cost_failure_redirect if destroy_cost_monad.failure?
 
-    redirect_to group_path(@group, user_id: current_user.id)
+    respond_to do |format|
+      format.turbo_stream do
+        render(turbo_stream: [
+          turbo_stream.remove(@user_costs_table_row_id),
+          turbo_stream.replace('group-table',
+                               partial: '/shared/groups/group_table',
+                               locals: { group: @group, cur_user: current_user })
+        ])
+      end
+
+      format.html { redirect_to group_path(@group, user_id: current_user.id) }
+    end
   end
 
   private
-
-  # move to cost create director
-  def broadcast_to_group_cost_channel
-    ActionCable.server.broadcast(group_costs_channel_room, 
-      { group_user_row_costs_sum_value:, group_cost_row_value_element: })
-  end
-
-  def group_costs_channel_room
-    "group_costs_Group #{@group.id} User #{current_user.id}"
-  end
-
-  def group_user_row_costs_sum_value
-    GroupsController.render(
-      partial: '/shared/groups/group_user_row_costs_sum_value_element',
-      locals: { user: current_user, group: @group }
-    ).squish
-  end
-
-  def group_cost_row_value_element
-    GroupsController.render(
-      partial: '/shared/groups/group_cost_row_value_element',
-      locals: { group: @group }
-    ).squish
-  end
 
   def create_cost_failure_redirect
     errors = create_monad.failure
