@@ -10,10 +10,11 @@
     <tbody>
       <% group_current_user_info = Services::Info::GroupUserInfoService.new(cur_user, group) %>
       <% group_current_user_info.costs.each_with_index do |cost, i| %>
-        <tr>
+        <tr id=<%= user_costs_table_row_id(cur_user, cost) %>>
           <td><%= i + 1 %></td>
           <th><%= cost.cost_value %></th>
           <th><%= link_to 'Edit', edit_user_group_cost_path(cur_user, group, cost) %></th>
+          <th><%= link_to 'Delete', user_group_cost_path(cur_user, group, cost), method: :delete %></th>
         </tr>
       <% end %>
     </tbody>

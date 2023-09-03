@@ -49,5 +49,9 @@ module Groups
     def group_user_row_debt_value_element_id(group, user)
       "group-#{group.id}-user-#{user.id}-row-debt-value-element"
     end
+
+    def user_costs_table_row_id(user, cost)
+      "costs-table-row-#{dom_id user}-#{dom_id cost}"
+    end
   end
 end

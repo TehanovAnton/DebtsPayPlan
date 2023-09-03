@@ -5,6 +5,8 @@ class CostsController < ApplicationController
 
   add_flash_types :error
 
+  helper [Groups::GroupHelpers]
+
   def new
     @cost = Cost.new
     @user = User.find(params[:user_id])
@@ -37,10 +39,22 @@ class CostsController < ApplicationController
   def destroy
     @group = Group.find(params[:group_id])
     @cost = Cost.find(params[:id])
+    @user_costs_table_row_id = helpers.user_costs_table_row_id(current_user, @cost)
 
     return destroy_cost_failure_redirect if destroy_cost_monad.failure?
 
-    redirect_to group_path(@group, user_id: current_user.id)
+    respond_to do |format|
+      format.turbo_stream do
+        render(turbo_stream: [
+          turbo_stream.remove(@user_costs_table_row_id),
+          turbo_stream.replace('group-table',
+                               partial: '/shared/groups/group_table',
+                               locals: { group: @group, cur_user: current_user })
+        ])
+      end
+
+      format.html { redirect_to group_path(@group, user_id: current_user.id) }
+    end
   end
 
   private
