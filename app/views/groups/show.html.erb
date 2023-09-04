@@ -1,10 +1,14 @@
 <div class="container">
   <div class="row py-5">
-    <%= turbo_frame_tag 'group' do %>
-      <p>
-        <%= link_to @group.name, edit_group_path(@group) %>
-      </p>
-    <% end %>
+    <div class="col">
+      <%= turbo_frame_tag 'group' do %>
+        <p>
+          <%= link_to @group.name, edit_group_path(@group) %>
+        </p>
+      <% end %>
+    </div>
+
+    <%= render '/shared/groups/flash_errors' %>
   </div>
 
   <%= render partial: '/shared/groups/group_table', locals: { group: @group, cur_user: current_user } %>

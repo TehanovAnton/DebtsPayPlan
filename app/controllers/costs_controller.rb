@@ -33,6 +33,7 @@ class CostsController < ApplicationController
 
     return update_cost_failure_redirect if update_cost_monad.failure?
 
+    flash.clear
     redirect_to group_path(@group, user_id: current_user.id)
   end
 
@@ -46,11 +47,11 @@ class CostsController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render(turbo_stream: [
-          turbo_stream.remove(@user_costs_table_row_id),
-          turbo_stream.replace('group-table',
-                               partial: '/shared/groups/group_table',
-                               locals: { group: @group, cur_user: current_user })
-        ])
+                 turbo_stream.remove(@user_costs_table_row_id),
+                 turbo_stream.replace('group-table',
+                                      partial: '/shared/groups/group_table',
+                                      locals: { group: @group, cur_user: current_user })
+               ])
       end
 
       format.html { redirect_to group_path(@group, user_id: current_user.id) }
@@ -62,17 +63,30 @@ class CostsController < ApplicationController
   def create_cost_failure_redirect
     errors = create_monad.failure
     redirect_to(
-      user_group_costs_path(current_user, @group),
+      group_path(@group),
       error: errors.full_messages.first
     )
   end
 
   def update_cost_failure_redirect
     errors = update_cost_monad.failure
-    redirect_to(
-      edit_user_group_cost_path(current_user, @group, @cost),
-      error: errors.full_messages.first
-    )
+    flash[:error] = errors.full_messages.first
+
+    respond_to do |format|
+      format.turbo_stream do
+        render(turbo_stream: [
+                 turbo_stream.replace('flash_errors',
+                                      partial: '/shared/groups/flash_errors'),
+                 turbo_stream.replace('user_costs',
+                                      partial: '/shared/costs/edit_form',
+                                      locals: { cur_user: current_user, group: @group, cost: @cost })
+               ])
+      end
+
+      format.html do
+        redirect_to(edit_user_group_cost_path(current_user, @group, @cost))
+      end
+    end
   end
 
   def destroy_cost_failure_redirect

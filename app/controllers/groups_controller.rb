@@ -39,13 +39,15 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render(turbo_stream: [
-          turbo_stream.replace('group-table',
-                               partial: '/shared/groups/group_table',
-                               locals: { group: @group, cur_user: current_user }),
-          turbo_stream.replace("user_costs",
-                               partial: '/shared/groups/group_user_costs',
-                               locals: { cur_user: current_user, group: @group })
-        ])
+                 turbo_stream.replace('group-table',
+                                      partial: '/shared/groups/group_table',
+                                      locals: { group: @group, cur_user: current_user }),
+                 turbo_stream.replace('user_costs',
+                                      partial: '/shared/groups/group_user_costs',
+                                      locals: { cur_user: current_user, group: @group }),
+                 turbo_stream.replace('flash_errors',
+                                      partial: '/shared/groups/flash_errors')
+               ])
       end
 
       format.html { render 'show' }
