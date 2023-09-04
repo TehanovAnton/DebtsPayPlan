@@ -8,4 +8,11 @@
   <%= form.hidden_field :costable_id, value: current_user.id %>
   <%= form.hidden_field 'group_member_attributes[group_id]', value: @group.id %>
   <%= form.submit 'Creat cost', class: 'btn mt-1' %>
+
+  <%
+=begin%>
+  TODO: create action for rendering costs table partial
+<%
+=end%>
+  <%= link_to 'Back to costs', @group, class: 'btn mt-1' %>
 <% end %>
