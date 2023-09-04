@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   root to: "groups#index"
   
+  get '/users/:user_id/groups/:group_id/costs/partial', to: 'costs#render_partial', as: :costs_partial
+  
   resources :users do
     resources :groups do
       # TODO: make its own resources

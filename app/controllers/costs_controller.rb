@@ -2,6 +2,7 @@
 
 class CostsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_group, only: %i[render_partial]
 
   add_flash_types :error
 
@@ -58,7 +59,25 @@ class CostsController < ApplicationController
     end
   end
 
+  def render_partial
+    @partial_path = params[:path]
+
+    respond_to do |format|
+      format.turbo_stream do
+        render(turbo_stream: turbo_stream.replace(partial: @partial_path, locals: { cur_user: current_user, group: @group }))
+      end
+
+      format.html do
+        render(partial: @partial_path, locals: { cur_user: current_user, group: @group })
+      end
+    end
+  end
+
   private
+
+  def set_group
+    @group = Group.find(params[:group_id])
+  end
 
   def create_cost_failure_redirect
     errors = create_monad.failure

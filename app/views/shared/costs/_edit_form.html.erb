@@ -7,13 +7,7 @@
         <%= form.submit %>
       <% end %>
     </div>
-<%
-=begin%>
-  TODO: create special action for rendering costs table
-  Show action render extra partials  
-<%
-=end%>
 
-    <%= link_to 'Costs', group %>
+    <%= link_to 'Costs', costs_partial_path(cur_user, group, path: '/shared/groups/group_user_costs') %>
   </div>
 <% end %>
