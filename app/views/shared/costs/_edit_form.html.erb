@@ -8,6 +8,6 @@
       <% end %>
     </div>
 
-    <%= link_to 'Costs', costs_partial_path(cur_user, group, path: '/shared/groups/group_user_costs') %>
+    <%= link_to 'Costs', costs_partial_path(cur_user, group, path: '/shared/groups/group_user_costs', turbo_frame: 'user_costs' ) %>
   </div>
 <% end %>

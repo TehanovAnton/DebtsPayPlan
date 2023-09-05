@@ -1,3 +1,4 @@
+<%= turbo_frame_tag 'user_group_debt_steps' do %>
   <table class="table table-dark table-striped">
     <thead>
       <tr>
@@ -18,8 +19,13 @@
             </th>
 
             <th><%= pay_value(debt_step) %></th>
+
+            <th>
+              <%= link_to 'Edit', edit_group_debt_step_path(@group, debt_step) %>
+            </th>
           </tr>
         <% end %>
       </tbody>
     <% end %>
   </table>
+<% end %>

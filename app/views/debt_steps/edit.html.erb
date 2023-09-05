@@ -1,5 +1,5 @@
 <%= turbo_frame_tag 'user_group_debt_steps' do %>
-  <%= form_with url: group_debt_steps_path(@group), model: debt_step do |form| %>
+  <%= form_with url: group_debt_step_path(@group, @debt_step), model: @debt_step do |form| %>
     <div class="container">
       <div class="row m-3">
         <%= form.label :debter_id, 'Debter' %>
@@ -21,5 +21,6 @@
     </div>
 
     <%= form.submit class: 'btn' %>
+    <%= link_to 'Costs', costs_partial_path(current_user, @group, path: '/shared/groups/group_user_costs', turbo_frame: 'user_group_debt_steps'), class: 'btn mt-1' %>
   <% end %>
 <% end %>

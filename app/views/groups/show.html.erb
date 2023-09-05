@@ -24,7 +24,7 @@
               <div class="carousel-item active">
                 <div class="row">
                   <div class="col text-center">
-                    <%= render partial: '/shared/groups/group_user_costs', locals: { cur_user: current_user, group: @group } %>
+                    <%= render partial: '/shared/groups/group_user_costs', locals: { cur_user: current_user, group: @group, turbo_frame: 'user_costs' } %>
                   </div>
                 </div>
               </div>
@@ -32,7 +32,7 @@
               <div class="carousel-item">
                 <div class="row">
                   <div class="col text-center">
-                    <%= render 'shared/groups/group_user_debt_steps' %>
+                    <%= render '/shared/groups/group_user_debt_steps' %>
                   </div>
                 </div>
               </div>

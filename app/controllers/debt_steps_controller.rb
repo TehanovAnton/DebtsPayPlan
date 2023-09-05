@@ -3,6 +3,10 @@
 class DebtStepsController < ApplicationController
   add_flash_types :error
 
+  before_action :set_debt_step, :set_group, only: %i[edit]
+
+  helper [DebtSteps::DebtStepHelpers]
+
   def new
     @group = Group.find(params[:group_id])
 
@@ -34,13 +38,19 @@ class DebtStepsController < ApplicationController
     redirect_to new_group_debt_step_path(@group, debt_step_form_fields:)
   end
 
+  def edit; end
+
   def update
     @group = Group.find(params[:group_id])
     @debt_step = DebtStep.find(params[:id])
 
-    return redirect_to(group_path(@group)) if update_debt_step_monad.success?
+    return update_debt_step_failure_redirect unless update_debt_step_monad.success?
 
-    update_debt_step_failure_redirect
+    respond_to do |format|
+      format.html do
+        redirect_to(group_path(@group))
+      end
+    end
   end
 
   def destroy
@@ -56,6 +66,14 @@ class DebtStepsController < ApplicationController
   end
 
   private
+
+  def set_debt_step
+    @debt_step = DebtStep.find(params[:id])
+  end
+
+  def set_group
+    @group = Group.find(params[:group_id])
+  end
 
   def update_debt_step_failure_redirect
     errors = update_debt_step_monad.failure

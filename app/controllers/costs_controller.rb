@@ -61,14 +61,19 @@ class CostsController < ApplicationController
 
   def render_partial
     @partial_path = params[:path]
+    turbo_frame = params[:turbo_frame]
 
     respond_to do |format|
       format.turbo_stream do
-        render(turbo_stream: turbo_stream.replace(partial: @partial_path, locals: { cur_user: current_user, group: @group }))
+        render(turbo_stream: turbo_stream.replace(turbo_frame,
+                                                  partial: @partial_path,
+                                                  locals: {
+                                                    cur_user: current_user, group: @group, turbo_frame:
+                                                  }))
       end
 
       format.html do
-        render(partial: @partial_path, locals: { cur_user: current_user, group: @group })
+        render(partial: @partial_path, locals: { cur_user: current_user, group: @group, turbo_frame: })
       end
     end
   end
