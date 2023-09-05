@@ -3,9 +3,10 @@
 class DebtStepsController < ApplicationController
   add_flash_types :error
 
-  before_action :set_debt_step, :set_group, only: %i[edit]
+  before_action :set_debt_step, only: %i[edit]
+  before_action :set_group, only: %i[edit render_partial]
 
-  helper [DebtSteps::DebtStepHelpers]
+  helper [DebtSteps::DebtStepHelpers, Groups::GroupHelpers]
 
   def new
     @group = Group.find(params[:group_id])
@@ -63,6 +64,25 @@ class DebtStepsController < ApplicationController
     ).destroy
 
     redirect_to group_path(@group)
+  end
+
+  def render_partial
+    @partial_path = params[:path]
+    turbo_frame = params[:turbo_frame]
+
+    respond_to do |format|
+      format.turbo_stream do
+        render(turbo_stream: turbo_stream.replace(turbo_frame,
+                                                  partial: @partial_path,
+                                                  locals: {
+                                                    cur_user: current_user, group: @group, turbo_frame:
+                                                  }))
+      end
+
+      format.html do
+        render(partial: @partial_path, locals: { cur_user: current_user, group: @group, turbo_frame: })
+      end
+    end
   end
 
   private

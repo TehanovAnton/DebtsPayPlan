@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   root to: "groups#index"
   
   get '/users/:user_id/groups/:group_id/costs/partial', to: 'costs#render_partial', as: :costs_partial
+
+  get '/groups/:group_id/debt_steps/partial', to: 'debt_steps#render_partial', as: :debt_steps_partial
   
   resources :users do
     resources :groups do

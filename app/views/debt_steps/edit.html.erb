@@ -21,6 +21,6 @@
     </div>
 
     <%= form.submit class: 'btn' %>
-    <%= link_to 'Costs', costs_partial_path(current_user, @group, path: '/shared/groups/group_user_costs', turbo_frame: 'user_group_debt_steps'), class: 'btn mt-1' %>
+    <%= link_to 'Debt Steps', debt_steps_partial_path(@group, path: '/shared/groups/group_user_debt_steps', turbo_frame: 'user_group_debt_steps'), class: 'btn mt-1' %>
   <% end %>
 <% end %>
