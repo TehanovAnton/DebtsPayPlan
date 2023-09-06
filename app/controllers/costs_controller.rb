@@ -10,7 +10,6 @@ class CostsController < ApplicationController
 
   def new
     @cost = Cost.new
-    @user = User.find(params[:user_id])
     @group = Group.find(params[:group_id])
   end
 
@@ -86,10 +85,17 @@ class CostsController < ApplicationController
 
   def create_cost_failure_redirect
     errors = create_monad.failure
-    redirect_to(
-      group_path(@group),
-      error: errors.full_messages.first
-    )
+    flash.now[:error] = errors.full_messages.first
+
+    respond_to do |format|
+      format.html do
+        redirect_to(new_user_group_cost_path(current_user, @group))
+      end
+
+      format.turbo_stream do
+        render(turbo_stream: turbo_stream.replace('flash_errors', partial: '/shared/groups/flash_errors'))
+      end
+    end
   end
 
   def update_cost_failure_redirect

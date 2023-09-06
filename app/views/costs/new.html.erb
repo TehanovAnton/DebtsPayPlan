@@ -1,8 +1,1 @@
-<%= form_with url: user_group_costs_path(@user, @group), model: @cost do |form| %>
-  <%= form.number_field :cost_value %>
-
-  <%= form.hidden_field :costable_type, value: @user.class.name %>
-  <%= form.hidden_field :costable_id, value: @user.id %>
-  <%= form.hidden_field 'group_member_attributes[group_id]', value: @group.id %>
-  <%= form.submit %>
-<% end %>
+<%= render partial: 'shared/costs/create_form', locals: { cur_user: current_user, group: @group, cost: @cost } %>

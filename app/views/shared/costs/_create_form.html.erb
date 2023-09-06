@@ -1,15 +1,15 @@
 <%= turbo_frame_tag 'user_costs' do %>
-  <%= form_with url: user_group_costs_path(current_user, @group), model: cost do |form| %>
+  <%= form_with url: user_group_costs_path(cur_user, group), model: cost do |form| %>
     <%= form.number_field :cost_value, 
                           class: 'form-control number-field-controll',
                           placeholder: 'Cost value'
     %>
 
-    <%= form.hidden_field :costable_type, value: current_user.class.name %>
-    <%= form.hidden_field :costable_id, value: current_user.id %>
-    <%= form.hidden_field 'group_member_attributes[group_id]', value: @group.id %>
+    <%= form.hidden_field :costable_type, value: cur_user.class.name %>
+    <%= form.hidden_field :costable_id, value: cur_user.id %>
+    <%= form.hidden_field 'group_member_attributes[group_id]', value: group.id %>
     <%= form.submit 'Creat cost', class: 'btn mt-1' %>
 
-    <%= link_to 'Costs', costs_partial_path(current_user, @group, path: '/shared/groups/group_user_costs'), class: 'btn mt-1' %>
+    <%= link_to 'Costs', costs_partial_path(cur_user, group, path: '/shared/groups/group_user_costs', turbo_frame: 'user_costs'), class: 'btn mt-1' %>
   <% end %>
 <% end %>
