@@ -1,7 +1,9 @@
-<div id='flash_errors' class="col">
-  <% flash.each do |type, msg| %>
-    <p>
-      <%= msg %>
-    </p>
-  <% end %>
-</div>
+<%= turbo_frame_tag 'flash_errors' do %>
+  <div class="col">
+    <% flash.each do |type, msg| %>
+      <p>
+        <%= msg %>
+      </p>
+    <% end %>
+  </div>
+<% end %>

@@ -63,14 +63,6 @@ class CostsController < ApplicationController
     turbo_frame = params[:turbo_frame]
 
     respond_to do |format|
-      format.turbo_stream do
-        render(turbo_stream: turbo_stream.replace(turbo_frame,
-                                                  partial: @partial_path,
-                                                  locals: {
-                                                    cur_user: current_user, group: @group, turbo_frame:
-                                                  }))
-      end
-
       format.html do
         render(partial: @partial_path, locals: { cur_user: current_user, group: @group, turbo_frame: })
       end
@@ -100,7 +92,7 @@ class CostsController < ApplicationController
 
   def update_cost_failure_redirect
     errors = update_cost_monad.failure
-    flash[:error] = errors.full_messages.first
+    flash.now[:error] = errors.full_messages.first
 
     respond_to do |format|
       format.turbo_stream do
