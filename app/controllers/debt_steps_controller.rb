@@ -33,10 +33,9 @@ class DebtStepsController < ApplicationController
     debt_step_create_director.create
     @debt_step = debt_step_create_director.debt_step
 
-    return redirect_to group_path(@group) if @debt_step.valid?
+    return creat_debt_step_failure_redirect unless @debt_step.valid?
 
-    flash_errors
-    redirect_to new_group_debt_step_path(@group, debt_step_form_fields:)
+    redirect_to group_path(@group)
   end
 
   def edit; end
@@ -97,10 +96,43 @@ class DebtStepsController < ApplicationController
 
   def update_debt_step_failure_redirect
     errors = update_debt_step_monad.failure
-    redirect_to(
-      edit_group_debt_step_path(@group, @debt_step),
-      error: errors.full_messages.first
-    )
+    flash.now[:error] = errors.full_messages.first
+
+    respond_to do |format|
+      format.html do
+        redirect_to(
+          edit_group_debt_step_path(@group, @debt_step),
+          error: errors.full_messages.first
+        )
+      end
+
+      format.turbo_stream do
+        render(turbo_stream: [
+                 turbo_stream.replace('flash_errors',
+                                      partial: '/shared/groups/flash_errors')
+               ])
+      end
+    end
+  end
+
+  def creat_debt_step_failure_redirect
+    flash_errors
+
+    respond_to do |format|
+      format.html do
+        redirect_to new_group_debt_step_path(@group, debt_step_form_fields:)
+      end
+
+      format.turbo_stream do
+        render(turbo_stream: [
+                 turbo_stream.replace('flash_errors',
+                                      partial: '/shared/groups/flash_errors'),
+                 turbo_stream.replace('user_group_debt_steps',
+                                      partial: '/shared/debt_steps/create_form',
+                                      locals: { group: @group, debt_step: DebtStep.new })
+               ])
+      end
+    end
   end
 
   def update_debt_step_monad
@@ -113,7 +145,7 @@ class DebtStepsController < ApplicationController
 
   def flash_errors
     error = @debt_step.errors.full_messages.first
-    flash[:error] = error
+    flash.now[:error] = error
   end
 
   def debt_step_params
