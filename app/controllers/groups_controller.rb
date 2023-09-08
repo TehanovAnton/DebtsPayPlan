@@ -45,6 +45,8 @@ class GroupsController < ApplicationController
                  turbo_stream.replace('user_costs',
                                       partial: '/shared/groups/group_user_costs',
                                       locals: { cur_user: current_user, group: @group, turbo_frame: 'user_costs' }),
+                 turbo_stream.replace('user_group_debt_steps',
+                                      partial: '/shared/groups/group_user_debt_steps'),
                  turbo_stream.replace('flash_errors',
                                       partial: '/shared/groups/flash_errors')
                ])
