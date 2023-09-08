@@ -66,7 +66,7 @@ RSpec.describe 'Costs', type: :request do
       it 'redirects to group page' do
         response = post(user_group_costs_path(group_owner, group), params:)
         expect(response).to redirect_to(
-          group_path(group, user_id: group_owner.id)
+          group_path(group)
         )
       end
     end
@@ -151,7 +151,7 @@ RSpec.describe 'Costs', type: :request do
         let(:cost_value) { nil }
 
         include_examples 'redirect to', 'new cost page' do
-          let(:redirect_path) { user_group_costs_path(group_owner, group) }
+          let(:redirect_path) { new_user_group_cost_path(group_owner, group) }
         end
       end
 
@@ -224,7 +224,7 @@ RSpec.describe 'Costs', type: :request do
       let(:request_path) { user_group_cost_path(group_owner, group, cost) }
 
       include_examples 'redirect to', 'group page' do
-        let(:redirect_path) { group_path(group, user_id: group_owner.id) }
+        let(:redirect_path) { group_path(group) }
       end
 
       include_examples 'updates group cost', :put do
