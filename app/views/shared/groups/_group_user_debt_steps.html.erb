@@ -26,6 +26,10 @@
             <th>
               <%= link_to 'Edit', edit_group_debt_step_path(@group, debt_step) %>
             </th>
+
+            <th>
+              <%= link_to 'Delete', group_debt_step_path(@group, debt_step), method: :delete %>
+            </th>
           </tr>
         <% end %>
       </tbody>
