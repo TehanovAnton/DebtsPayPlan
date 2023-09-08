@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get '/groups/:group_id/debt_steps/partial', to: 'debt_steps#render_partial', as: :debt_steps_partial
   
   resources :users do
-    resources :groups do
+    resources :groups, only: [] do
       # TODO: make its own resources
       resources :costs
 

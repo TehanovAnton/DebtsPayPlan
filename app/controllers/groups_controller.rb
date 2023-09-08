@@ -17,18 +17,16 @@ class GroupsController < ApplicationController
   end
 
   def new
-    @user = User.find(params[:user_id])
   end
 
   def create
-    @user = User.find(params[:user_id])
     group_create_director = Services::Groups::GroupCreateDirector.new(
       group_params[:name],
-      @user
+      current_user
     )
     group_create_director.create
 
-    redirect_to add_user_member_show_group_path(group_create_director.group)
+    redirect_to groups_path(group_create_director.group)
   end
 
   def show
