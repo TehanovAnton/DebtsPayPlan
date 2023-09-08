@@ -10,7 +10,6 @@ RSpec.describe DebtStep, type: :model do
     let!(:group) do
       FactoryBot.create(
         :group,
-        :with_group_cost,
         owner: user1,
         add_users: [user2]
       )
@@ -30,7 +29,7 @@ RSpec.describe DebtStep, type: :model do
     end
 
     let!(:debt_step) do
-      FactoryBot.create(:debt_step, debter: user1, recipient: user2, group_debts_pay_plan:)
+      FactoryBot.create(:debt_step, debter: user1, recipient: user2, pay_value: 1, group_debts_pay_plan:)
     end
 
     describe 'group_debts_pay_plan' do
