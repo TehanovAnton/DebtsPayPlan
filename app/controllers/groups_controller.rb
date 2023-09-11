@@ -16,8 +16,7 @@ class GroupsController < ApplicationController
     )
   end
 
-  def new
-  end
+  def new; end
 
   def create
     group_create_director = Services::Groups::GroupCreateDirector.new(
