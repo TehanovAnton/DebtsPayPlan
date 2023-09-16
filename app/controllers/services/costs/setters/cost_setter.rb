@@ -3,9 +3,9 @@
 module Services
   module Costs
     module Setters
-      class NewGroupSetter < BaseSetter
+      class CostSetter < BaseSetter
         def set
-          @group = @definer.define
+          @cost = @definer.define
         end
       end
     end

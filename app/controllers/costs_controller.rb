@@ -15,17 +15,28 @@ class CostsController < ApplicationController
     # Choose the way of cost and group setting by extending Definers and Setters class
 
     cost_definer = Services::Costs::Definers::NewCostDefiner.new
-    @cost = Services::Costs::Setters::NewCostSetter.new(cost_definer).set
+    @cost = Services::Costs::Setters::CostSetter.new(cost_definer).set
 
     group_definer = Services::Costs::Definers::NewGroupDefiner.new(params[:group_id])
-    @group = Services::Costs::Setters::NewGroupSetter.new(group_definer).set
+    @group = Services::Costs::Setters::GroupSetter.new(group_definer).set
   end
 
   def create
-    @group = Group.includes(:users).find(params[:group_id])
-    @cost_value = cost_params(:create)[:cost_value]
+    # Open close -> polymorfism
 
-    return create_cost_failure_redirect if create_monad.failure?
+    group_definer = Services::Costs::Definers::CreateGroupDefiner.new(params[:group_id])
+    @group = Services::Costs::Setters::GroupSetter.new(group_definer).set
+
+    controller_params = Services::Costs::ControllerParams::CreateControllerParams.new(params)
+
+    director = Services::Costs::CostCreateDirector.new(
+      @group,
+      current_user,
+      controller_params.params[:cost_value]
+    )
+    create_monad = Services::Costs::Monads::CreateCostMonad.new(director).monad
+
+    return create_cost_failure_redirect(create_monad) if create_monad.failure?
 
     redirect_to @group
   end
@@ -83,7 +94,7 @@ class CostsController < ApplicationController
     @group = Group.find(params[:group_id])
   end
 
-  def create_cost_failure_redirect
+  def create_cost_failure_redirect(create_monad)
     errors = create_monad.failure
     flash.now[:error] = errors.full_messages.first
 
@@ -125,14 +136,6 @@ class CostsController < ApplicationController
       edit_user_group_cost_path(current_user, @group, @cost),
       error:
     )
-  end
-
-  def create_monad
-    @create_monad ||= Services::Costs::CostCreateDirector.new(
-      @group,
-      current_user,
-      @cost_value
-    ).create
   end
 
   def update_cost_monad
