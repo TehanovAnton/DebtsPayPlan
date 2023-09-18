@@ -42,8 +42,9 @@ class CostsController < ApplicationController
   end
 
   def edit
-    @group = Group.find(params[:group_id])
-    @cost = Cost.find(params[:id])
+    # Provide multiple ways to fine group or cost, for example by association
+    @group = Services::Costs::Definers::GroupByIdDefiner.new(params[:group_id]).define
+    @cost = Services::Costs::Definers::CostByIdDefiner.new(params[:id]).define
   end
 
   def update
