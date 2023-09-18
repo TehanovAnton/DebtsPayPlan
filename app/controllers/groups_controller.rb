@@ -31,7 +31,9 @@ class GroupsController < ApplicationController
   def show
     @group = Group.find(params[:id])
     @cost = Cost.new
-    cookies[:current_user_id] = current_user.id
+
+    # count every reload
+    impressionist(@group)
 
     respond_to do |format|
       format.turbo_stream do

@@ -15,6 +15,8 @@ end
 class Group < ApplicationRecord
   include Validations::Groups::Validation
 
+  is_impressionable
+
   has_many :group_members, dependent: :destroy
   has_many :users,
            through: :group_members,
