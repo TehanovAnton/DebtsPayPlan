@@ -40,6 +40,8 @@ gem 'devise', '~> 4.9', '>= 4.9.2'
 
 gem 'turbo-rails'
 
+gem 'impressionist', '~> 2.0'
+
 group :development, :test do
   gem 'pry-rails'
   gem 'pry-nav'
