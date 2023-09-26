@@ -32,19 +32,24 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @cost = Cost.new
 
-    # count every reload
     impressionist(@group)
-    # check: was that first user view of group -> stream to update viewed mark
 
+    group_user_row_target = Broadcasters::Targets::GroupUserRowTarget.new(@group, current_user)
+    user_group_impression_helper = Services::Impressions::GroupUserImpression.new(@group, current_user)
+    groups_partial_loader = PartialLoaders::GroupsPartialsLoader.new(
+      '/shared/groups/group_user_row',
+      { group: @group, cur_user: current_user, user: current_user, index: 0 }
+    )
     group_stream_broadcaster = Services::Broadcasters::Groups::GroupBroadcaster.new(
       @group,
-      helpers.group_user_row_id(@group, current_user),
-      GroupsController.render(
-        partial: '/shared/groups/group_user_row',
-        locals: { group: @group, cur_user: current_user, user: current_user, index: 0 }
-      )
+      group_user_row_target.target,
+      groups_partial_loader.load
     )
-    group_stream_broadcaster.broadcast if Services::Impressions::GroupUserImpression.new(@group, current_user).impressioned_now?
+    broadcaster = Broadcasters::FirstUserGroupImpressionBroadcaster.new(
+      group_stream_broadcaster,
+      user_group_impression_helper
+    )
+    broadcaster.broadcast
 
     respond_to do |format|
       format.turbo_stream do
