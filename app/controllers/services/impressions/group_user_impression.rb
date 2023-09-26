@@ -9,7 +9,11 @@ module Services
       end
 
       def impressioned?
-        Impression.where(impressionable: @group, user_id: @user.id).count > 1
+        Impression.where(impressionable: @group, user_id: @user.id).count >= 1
+      end
+
+      def impressioned_now?
+        Impression.where(impressionable: @group, user_id: @user.id).count == 1
       end
     end
   end
