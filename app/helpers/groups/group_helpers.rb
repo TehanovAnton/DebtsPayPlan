@@ -53,5 +53,9 @@ module Groups
     def user_costs_table_row_id(user, cost)
       "costs-table-row-#{dom_id user}-#{dom_id cost}"
     end
+
+    def user_looked_group?(group, user)
+      Services::Impressions::GroupUserImpression.new(group, user).impressioned?
+    end
   end
 end
