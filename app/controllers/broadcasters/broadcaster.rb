@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Broadcasters
   class Broadcaster
     include Services::Broadcasters::BroadcastMethod

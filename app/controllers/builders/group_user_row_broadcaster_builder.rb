@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Builders
   module BuilderMethods
     def result
@@ -8,16 +10,19 @@ module Builders
   class GroupUserRowBroadcasterBuilder
     include BuilderMethods
 
+    attr_reader :group, :user
+
     def initialize(group, user)
       @group = group
       @user = user
     end
 
     def result
-      Services::Broadcasters::Groups::GroupBroadcaster.new(
-        @group,
+      Broadcasters::FirstUserGroupImpressionBroadcaster.new(
         @target,
-        @partial_loader.load
+        @partial_loader,
+        @group,
+        @user
       )
     end
 

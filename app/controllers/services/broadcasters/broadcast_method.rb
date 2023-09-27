@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Broadcasters
-  module Targets
-    module TargetMethod
-      def target
+module Services
+  module Broadcasters
+    module BroadcastMethod
+      def broadcast
         raise StandardError, 'not implemented'
       end
     end

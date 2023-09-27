@@ -34,22 +34,12 @@ class GroupsController < ApplicationController
 
     impressionist(@group)
 
-    group_user_row_target = Broadcasters::Targets::GroupUserRowTarget.new(@group, current_user)
-    user_group_impression_helper = Services::Impressions::GroupUserImpression.new(@group, current_user)
-    groups_partial_loader = PartialLoaders::GroupsPartialsLoader.new(
-      '/shared/groups/group_user_row',
-      { group: @group, cur_user: current_user, user: current_user, index: 0 }
-    )
-    group_stream_broadcaster = Services::Broadcasters::Groups::GroupBroadcaster.new(
-      @group,
-      group_user_row_target.target,
-      groups_partial_loader.load
-    )
-    broadcaster = Broadcasters::FirstUserGroupImpressionBroadcaster.new(
-      group_stream_broadcaster,
-      user_group_impression_helper
-    )
-    broadcaster.broadcast
+    broadcast_builder = Builders::GroupUserRowBroadcasterBuilder.new(@group, current_user)
+    Builders::Directors::GroupUserRowBroadcastDirector.new(
+      broadcast_builder
+    ).build
+    broadcast_builder.result
+                     .broadcast
 
     respond_to do |format|
       format.turbo_stream do
