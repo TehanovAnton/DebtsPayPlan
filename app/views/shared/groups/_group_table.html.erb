@@ -10,6 +10,8 @@
           </tr>
         </thead>
 
+        <%= turbo_stream_from group %>
+
         <tbody id="rows">
           <% group.users.each_with_index do |user, i| %>
             <%= render partial: '/shared/groups/group_user_row', locals: { cur_user: , user: , group: group, index: i } %>

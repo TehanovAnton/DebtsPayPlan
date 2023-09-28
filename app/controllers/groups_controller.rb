@@ -31,7 +31,15 @@ class GroupsController < ApplicationController
   def show
     @group = Group.find(params[:id])
     @cost = Cost.new
-    cookies[:current_user_id] = current_user.id
+
+    impressionist(@group)
+
+    broadcast_builder = Builders::GroupUserRowBroadcasterBuilder.new(@group, current_user)
+    Builders::Directors::GroupUserRowBroadcastDirector.new(
+      broadcast_builder
+    ).build
+    broadcast_builder.result
+                     .broadcast
 
     respond_to do |format|
       format.turbo_stream do
