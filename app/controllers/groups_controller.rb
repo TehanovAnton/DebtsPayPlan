@@ -73,8 +73,8 @@ class GroupsController < ApplicationController
 
   def add_user_member
     @group = Group.find(params[:id])
-    @user = User.find_by(name: params[:user_name])
-    @user ||= User.create(name: params[:user_name])
+    @user = User.find(params[:user_id])
+    Notification.find(params[:notification_id]).destroy
 
     group_user_adder = Services::Groups::GroupUserAddDirector.new(
       @group,

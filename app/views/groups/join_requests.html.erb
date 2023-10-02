@@ -9,10 +9,10 @@
             <h5 class="card-title"><%= user.name %></h5>
             <h6 class="card-subtitle mb-2 text-muted"><%= notification.created_at.strftime("%e %B %Y") %></h6>
 
-            <a href="#"
-               class="card-link px-2">
-              Accept
-            </a>
+            <%= link_to 'Accept',
+                        add_user_member_group_path(@group, user_id: user.id, notification_id: notification.id),
+                        method: :post,
+                        class: "card-link px-2" %>
             
             <a href="#"
                class="card-link px-2">
