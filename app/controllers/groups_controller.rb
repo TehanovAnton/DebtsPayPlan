@@ -7,13 +7,7 @@ class GroupsController < ApplicationController
   helper [Groups::GroupHelpers, DebtSteps::DebtStepHelpers]
 
   def index
-    @user_groups = Group.joins(:users).where(
-      group_members: {
-        type: %w[GroupOwnerMember GroupMember],
-        group_memberable_type: 'User',
-        group_memberable_id: current_user.id
-      }
-    )
+    @user_groups = Group.all
   end
 
   def new; end
@@ -63,6 +57,18 @@ class GroupsController < ApplicationController
 
   def add_user_member_show
     @group = Group.find(params[:id])
+  end
+
+  def join_request_notification
+    @group = Group.find(params[:id])
+    join_request_helper = Services::Groups::JoinRequestHelper.new(@group, current_user)
+    join_request_helper.send if join_request_helper.send?
+  end
+
+  def join_requests
+    # TODO: preload notifications
+    @group = Group.find(params[:id])
+    @notifications = @group.notifications
   end
 
   def add_user_member

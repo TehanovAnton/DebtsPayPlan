@@ -1,0 +1,16 @@
+<% if in_group?(group, current_user) %>
+  <strong>
+    Already in group
+  </strong>
+
+<% elsif send_join_request?(group, current_user) %>
+  <a href=<%= join_request_notification_group_path(group) %>
+     class="card-link">
+    Send join request
+  </a>
+
+<% else %>
+  <strong>
+    Request send
+  </strong>
+<% end %>

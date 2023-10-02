@@ -57,5 +57,17 @@ module Groups
     def user_looked_group?(group, user)
       Services::Impressions::GroupUserImpression.new(group, user).impressioned?
     end
+
+    def send_join_request?(group, user)
+      group.notifications.where(params: { user: }).count.zero?
+    end
+
+    def join_requests_link_name(group)
+      "Join requests #{group.notifications.count}"
+    end
+
+    def in_group?(group, user)
+      group.users.include?(user)
+    end
   end
 end

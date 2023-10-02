@@ -1,18 +1,30 @@
-<div class="list-group">
-  <% @user_groups.each do |group| %>
-    <a href=<%= user_group_path(group.owner, group) %> class="list-group-item list-group-item-action" aria-current="true">
-      <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">
-          <%= group.name %>
-        </h5>
-        <small>
-         <%= group.created_at.strftime("%e %B %Y") %>
-        </small>
-      </div>
-      <p class="mb-1">
-        My debt is <%= current_user.group_user_debt(group)&.debt_value || 'unknown' %>
-      </p>
-      <small>And some small print.</small>
-    </a>
-  <% end %>
+<div class="container">
+  <div class="row">
+    <%= render '/shared/groups/flash_errors' %>
+  </div>
+
+  <div class="row">
+    <div class="list-group">
+      <% @user_groups.each do |group| %>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><%= group.name %></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><%= group.created_at.strftime("%e %B %Y") %></h6>
+            <p class="card-text">
+              My debt is <%= current_user.group_user_debt(group)&.debt_value || 'unknown' %>
+            </p>
+
+            <a href=<%= user_group_path(group.owner, group) %>
+               class="card-link px-2">
+              View
+            </a>
+            
+            <%= turbo_frame_tag 'group join request' do %>
+              <%= render partial: '/shared/groups/group_join_request', locals: { group: } %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
