@@ -14,10 +14,9 @@
               My debt is <%= current_user.group_user_debt(group)&.debt_value || 'unknown' %>
             </p>
 
-            <a href=<%= user_group_path(group.owner, group) %>
-               class="card-link px-2">
-              View
-            </a>
+            <%= link_to 'View',
+                        user_group_path(group.owner, group),
+                        class: "card-link px-2" if in_group?(group, current_user)%>
             
             <%= turbo_frame_tag 'group join request' do %>
               <%= render partial: '/shared/groups/group_join_request', locals: { group: } %>

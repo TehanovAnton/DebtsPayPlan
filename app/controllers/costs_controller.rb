@@ -9,11 +9,6 @@ class CostsController < ApplicationController
   helper [Groups::GroupHelpers]
 
   def new
-    # Open-Closed -> polymorfism
-    #   define separate ways for definition cost and group
-
-    # Choose the way of cost and group setting by extending Definers and Setters class
-
     cost_definer = Services::Costs::Definers::NewCostDefiner.new
     @cost = Services::Costs::Setters::CostSetter.new(cost_definer).set
 

@@ -5,18 +5,32 @@ module Services
     class GroupUserAddDirector
       attr_reader :group, :user
 
+      include Dry::Monads[:result]
+
       def initialize(group, user)
         @group = group
         @user = user
       end
 
       def add
-        group_member_adder.add
-        create_debt
-        cost_creater.create
+        return failure_monad unless group_member_adder.add?
+
+        success_monad
       end
 
       private
+
+      def success_monad
+        group_member_adder.add
+        create_debt
+        cost_creater.create
+
+        Success()
+      end
+
+      def failure_monad
+        Failure(group_member_adder.error)
+      end
 
       def group_member_adder
         @group_member_adder ||= Creaters::GroupMembersCreaters::GroupMemberAdder.new(
