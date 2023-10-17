@@ -1,8 +1,6 @@
-<% group_user_info = group_user_info(user, group) %>
 <% activity_class = user_row_activity_class(user, cur_user) %>
-<% user_row_id = group_user_row_id(group, user) %>
 
-<tr id=<%= user_row_id %>>
+<tr id=<%= group_user_row_id(group, user) %>>
   <th scope="row" class=<%= activity_class %>>
     <%= index + 1 %>
   </th>
@@ -13,10 +11,10 @@
   </td>
 
   <td class=<%= activity_class %> >
-    <%= group_user_info.costs_sum %>
+    <%= group_user_costs_sum(group, user)%>
   </td>
 
   <td class=<%= activity_class %> >
-    <%= group_user_info.debt.debt_value %>
+    <%= group_user_debt_value(group, user)%>
   </td>
 </tr>

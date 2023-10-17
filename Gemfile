@@ -40,7 +40,10 @@ gem 'devise', '~> 4.9', '>= 4.9.2'
 
 gem 'turbo-rails'
 
+# Counts page views 
 gem 'impressionist', '~> 2.0'
+
+gem 'noticed', '~> 1.6', '>= 1.6.3'
 
 group :development, :test do
   gem 'pry-rails'

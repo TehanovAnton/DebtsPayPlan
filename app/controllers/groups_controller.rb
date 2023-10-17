@@ -4,16 +4,12 @@ class GroupsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_group, only: %i[edit update]
 
+  add_flash_types :error
+
   helper [Groups::GroupHelpers, DebtSteps::DebtStepHelpers]
 
   def index
-    @user_groups = Group.joins(:users).where(
-      group_members: {
-        type: %w[GroupOwnerMember GroupMember],
-        group_memberable_type: 'User',
-        group_memberable_id: current_user.id
-      }
-    )
+    @user_groups = Group.all
   end
 
   def new; end
@@ -42,19 +38,21 @@ class GroupsController < ApplicationController
                      .broadcast
 
     respond_to do |format|
-      format.turbo_stream do
-        render(turbo_stream: [
-                 turbo_stream.replace('group-table',
-                                      partial: '/shared/groups/group_table',
-                                      locals: { group: @group, cur_user: current_user, turbo_frame: 'user_costs' }),
-                 turbo_stream.replace('user_costs',
-                                      partial: '/shared/groups/group_user_costs',
-                                      locals: { cur_user: current_user, group: @group, turbo_frame: 'user_costs' }),
-                 turbo_stream.replace('user_group_debt_steps',
-                                      partial: '/shared/groups/group_user_debt_steps'),
-                 turbo_stream.replace('flash_errors',
-                                      partial: '/shared/groups/flash_errors')
-               ])
+      unless params[:html_only]
+        format.turbo_stream do
+          render(turbo_stream: [
+                   turbo_stream.replace('group-table',
+                                        partial: '/shared/groups/group_table',
+                                        locals: { group: @group, cur_user: current_user, turbo_frame: 'user_costs' }),
+                   turbo_stream.replace('user_costs',
+                                        partial: '/shared/groups/group_user_costs',
+                                        locals: { cur_user: current_user, group: @group, turbo_frame: 'user_costs' }),
+                   turbo_stream.replace('user_group_debt_steps',
+                                        partial: '/shared/groups/group_user_debt_steps'),
+                   turbo_stream.replace('flash_errors',
+                                        partial: '/shared/groups/flash_errors')
+                 ])
+        end
       end
 
       format.html { render 'show' }
@@ -65,18 +63,43 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
   end
 
+  def join_request_notification
+    @group = Group.find(params[:id])
+    join_request_helper = Services::Groups::JoinRequestHelper.new(@group, current_user)
+    join_request_helper.send if join_request_helper.send?
+  end
+
+  def join_requests
+    # TODO: preload notifications
+    @group = Group.find(params[:id])
+
+    @notifications = @group.join_notifications
+  end
+
+  def reject_join_request
+    @group = Group.find(params[:id])
+    @notification = Notification.find(params[:notification_id])
+    @join_requester = @notification.params[:user]
+
+    rejection_helper = Services::Groups::JoinRejectionHelper.new(@group, @join_requester)
+
+    if rejection_helper.send?
+      @notification.destroy
+      rejection_helper.send
+    else
+      flash[:error] = rejection_helper.error_message
+    end
+
+    redirect_to group_path(@group, html_only: true)
+  end
+
   def add_user_member
     @group = Group.find(params[:id])
-    @user = User.find_by(name: params[:user_name])
-    @user ||= User.create(name: params[:user_name])
+    @user = User.find(params[:user_id])
 
-    group_user_adder = Services::Groups::GroupUserAddDirector.new(
-      @group,
-      @user
-    )
-    group_user_adder.add
+    add_user_member_failure_redirect if add_user_member_monad.failure?
 
-    redirect_to group_path(@group)
+    redirect_to group_path(@group, html_only: true)
   end
 
   def edit; end
@@ -90,6 +113,18 @@ class GroupsController < ApplicationController
   end
 
   private
+
+  def add_user_member_failure_redirect
+    error = add_user_member_monad.failure
+    flash[:error] = error
+  end
+
+  def add_user_member_monad
+    @add_user_member_monad ||= Services::Groups::GroupUserAddDirector.new(
+      @group,
+      @user
+    ).add
+  end
 
   def set_group
     @group = Group.find(params[:id])

@@ -56,6 +56,8 @@ class Group < ApplicationRecord
            source_type: 'GroupUserStepState',
            dependent: :destroy
 
+  has_many :notifications, as: :recipient
+
   accepts_nested_attributes_for :group_owner_member
 
   def average_group_users_cost_value
@@ -67,5 +69,18 @@ class Group < ApplicationRecord
   def group_users_costs_values
     Cost.group_users_costs(self)
         .pluck(:cost_value)
+  end
+
+  def join_notifications
+    notifications.where(
+      type: GroupJoinRequestNotification.name
+    )
+  end
+
+  def user_join_notifications(user)
+    notifications.where(
+      type: GroupJoinRequestNotification.name,
+      params: { user: }
+    )
   end
 end

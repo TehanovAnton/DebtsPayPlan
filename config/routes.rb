@@ -21,7 +21,10 @@ Rails.application.routes.draw do
   resources :groups do
     member do
       get :add_user_member_show
+      get :join_request_notification
+      get :join_requests    
       post :add_user_member
+      post :reject_join_request
     end
 
     resources :debt_steps

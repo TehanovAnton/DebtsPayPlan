@@ -31,12 +31,23 @@ class User < ApplicationRecord
   has_many :group_user_step_states,
            dependent: :destroy
 
+  has_many :notifications, as: :recipient, dependent: :destroy
+
   def group_user_costs(group)
     costs.joins(:group)
          .where(
            costs: { costable_type: self.class.name, costable_id: id },
            groups: { id: group.id }
          )
+  end
+
+  def group_rejection_notifications(group)
+    Notification.where(
+      id: notifications.where(type: GroupJoinRejectionNotification.name)
+                        .map { |n| n if n.params[:group].id == group.id }
+                        .compact
+                        .pluck(:id)
+    )
   end
 
   def group_user_costs_sum(group); end

@@ -1,11 +1,7 @@
 <div class="container">
   <div class="row py-5">
     <div class="col">
-      <%= turbo_frame_tag 'group' do %>
-        <p>
-          <%= link_to @group.name, edit_group_path(@group) %>
-        </p>
-      <% end %>
+      <%= render partial: '/shared/groups/incoming_join_requsts', locals: { gorup: @group } %>
     </div>
 
     <%= render '/shared/groups/flash_errors' %>

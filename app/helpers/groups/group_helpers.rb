@@ -57,5 +57,30 @@ module Groups
     def user_looked_group?(group, user)
       Services::Impressions::GroupUserImpression.new(group, user).impressioned?
     end
+
+    def send_join_request?(group, user)
+      group.user_join_notifications(user).count.zero?
+    end
+
+    def join_requests_link_name(group)
+      join_requests_count = group.notifications.where(
+        type: GroupJoinRequestNotification.name
+      ).count
+
+      "Join requests #{join_requests_count}"
+    end
+
+    def in_group?(group, user)
+      group.users.include?(user)
+    end
+
+    def join_request_rejected?(group, user)
+      rejection_notifications = Notification.where(
+        type: GroupJoinRejectionNotification.name,
+        recipient: user
+      )
+
+      rejection_notifications.map { |n| n.params[:group].id == group.id }.any?
+    end
   end
 end
