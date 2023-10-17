@@ -75,7 +75,6 @@ module Groups
     end
 
     def join_request_rejected?(group, user)
-      # binding.pry
       rejection_notifications = Notification.where(
         type: GroupJoinRejectionNotification.name,
         recipient: user

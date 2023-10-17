@@ -41,6 +41,15 @@ class User < ApplicationRecord
          )
   end
 
+  def group_rejection_notifications(group)
+    Notification.where(
+      id: notifications.where(type: GroupJoinRejectionNotification.name)
+                        .map { |n| n if n.params[:group].id == group.id }
+                        .compact
+                        .pluck(:id)
+    )
+  end
+
   def group_user_costs_sum(group); end
 
   def group_user_debt(group)

@@ -25,12 +25,17 @@ module Services
         create_debt
         cost_creater.create
         user_join_requests_notifications.destroy_all
+        user_rejection_notifications.destroy_all
 
         Success()
       end
 
       def user_join_requests_notifications
         group.join_notifications.where(params: { user: })
+      end
+
+      def user_rejection_notifications
+        user.group_rejection_notifications(group)
       end
 
       def failure_monad
