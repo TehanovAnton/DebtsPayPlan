@@ -31,6 +31,8 @@ class User < ApplicationRecord
   has_many :group_user_step_states,
            dependent: :destroy
 
+  has_many :notifications, as: :recipient, dependent: :destroy
+
   def group_user_costs(group)
     costs.joins(:group)
          .where(

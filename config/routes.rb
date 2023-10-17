@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       get :join_request_notification
       get :join_requests    
       post :add_user_member
+      post :reject_join_request
     end
 
     resources :debt_steps

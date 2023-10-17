@@ -2,12 +2,7 @@
 
 module Services
   module Groups
-    class JoinRequestHelper
-      def initialize(group, user)
-        @group = group
-        @user = user
-      end
-
+    class JoinRequestHelper < JoinHelperBase
       def send?
         @group.users.include?(@user) ? false : true
       end

@@ -14,10 +14,10 @@
                         method: :post,
                         class: "card-link px-2" %>
             
-            <a href="#"
-               class="card-link px-2">
-              Reject
-            </a>
+            <%= link_to 'Reject',
+                        reject_join_request_group_path(@group, user_id: user.id, notification_id: notification.id),
+                        method: :post,
+                        class: "card-link px-2" %>
           </div>
         </div>
       <% end %>

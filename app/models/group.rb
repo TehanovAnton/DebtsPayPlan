@@ -70,4 +70,17 @@ class Group < ApplicationRecord
     Cost.group_users_costs(self)
         .pluck(:cost_value)
   end
+
+  def join_notifications
+    notifications.where(
+      type: GroupJoinRequestNotification.name
+    )
+  end
+
+  def user_join_notifications(user)
+    notifications.where(
+      type: GroupJoinRequestNotification.name,
+      params: { user: }
+    )
+  end
 end

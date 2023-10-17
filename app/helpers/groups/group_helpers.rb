@@ -59,15 +59,29 @@ module Groups
     end
 
     def send_join_request?(group, user)
-      group.notifications.where(params: { user: }).count.zero?
+      group.user_join_notifications(user).count.zero?
     end
 
     def join_requests_link_name(group)
-      "Join requests #{group.notifications.count}"
+      join_requests_count = group.notifications.where(
+        type: GroupJoinRequestNotification.name
+      ).count
+
+      "Join requests #{join_requests_count}"
     end
 
     def in_group?(group, user)
       group.users.include?(user)
+    end
+
+    def join_request_rejected?(group, user)
+      # binding.pry
+      rejection_notifications = Notification.where(
+        type: GroupJoinRejectionNotification.name,
+        recipient: user
+      )
+
+      rejection_notifications.map { |n| n.params[:group].id == group.id }.any?
     end
   end
 end

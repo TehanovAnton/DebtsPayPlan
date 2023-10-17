@@ -14,3 +14,9 @@
     Request send
   </strong>
 <% end %>
+
+<% if join_request_rejected?(group, current_user) %>
+  <strong>
+    Your join request is rejected
+  </strong>
+<% end %>

@@ -72,13 +72,30 @@ class GroupsController < ApplicationController
   def join_requests
     # TODO: preload notifications
     @group = Group.find(params[:id])
-    @notifications = @group.notifications
+
+    @notifications = @group.join_notifications
+  end
+
+  def reject_join_request
+    @group = Group.find(params[:id])
+    @notification = Notification.find(params[:notification_id])
+    @join_requester = @notification.params[:user]
+
+    rejection_helper = Services::Groups::JoinRejectionHelper.new(@group, @join_requester)
+
+    if rejection_helper.send?
+      @notification.destroy
+      rejection_helper.send
+    else
+      flash[:error] = rejection_helper.error_message
+    end
+
+    redirect_to group_path(@group, html_only: true)
   end
 
   def add_user_member
     @group = Group.find(params[:id])
     @user = User.find(params[:user_id])
-    Notification.find(params[:notification_id]).destroy
 
     add_user_member_failure_redirect if add_user_member_monad.failure?
 
