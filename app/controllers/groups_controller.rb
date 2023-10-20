@@ -6,7 +6,7 @@ class GroupsController < ApplicationController
 
   add_flash_types :error
 
-  helper [Groups::GroupHelpers, DebtSteps::DebtStepHelpers]
+  helper [Groups::GroupHelpers, DebtSteps::DebtStepHelpers, GroupMembers::GroupMemberHelpers]
 
   def index
     @user_groups = Group.all

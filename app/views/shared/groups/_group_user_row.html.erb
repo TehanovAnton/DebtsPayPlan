@@ -17,4 +17,10 @@
   <td class=<%= activity_class %> >
     <%= group_user_debt_value(group, user)%>
   </td>
+
+  <td class=<%= activity_class %> >
+    <%= form_with(url: group_group_member_path(group, group_member(group, user)), method: :delete) do |form| %>
+      <% form.button 'exclude' %>
+    <% end %>
+  </td>
 </tr>
