@@ -29,7 +29,7 @@ module Groups
     end
 
     def group_user_debt_value(group, user)
-      group_user_info_obj = Services::Info::GroupUserInfoService.new(group, user)
+      group_user_info_obj = Services::Info::GroupUserInfoService.new(user, group)
       Maybe(group_user_info_obj.debt).fmap(&:debt_value).value_or(0)
     end
 
