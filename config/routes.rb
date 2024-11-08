@@ -28,5 +28,7 @@ Rails.application.routes.draw do
     end
 
     resources :debt_steps
-  end
+
+    resources :group_members
+  end  
 end
